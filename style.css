@@ -274,6 +274,19 @@ body::before {
 }
 .who-card p { font-size: .875rem; color: var(--body-text); line-height: 1.5; }
 
+/* ── BEYOND LITIGATION NOTE ── */
+.beyond-note {
+  margin-top: 2.5rem; padding: 1.4rem 2rem;
+  background: linear-gradient(135deg, rgba(200,155,32,.1), rgba(27,52,100,.4));
+  border: 1px solid rgba(200,155,32,.3); border-radius: var(--radius);
+  text-align: center;
+}
+.beyond-label {
+  font-size: .72rem; font-weight: 600; letter-spacing: .18em;
+  text-transform: uppercase; color: var(--gold); margin-bottom: .6rem;
+}
+.beyond-note p:last-child { font-size: .9rem; color: var(--body-text); line-height: 1.6; }
+
 /* ── TRUST ── */
 .trust-grid {
   display: grid; grid-template-columns: repeat(4,1fr);
