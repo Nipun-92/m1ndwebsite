@@ -133,7 +133,51 @@ const sectionTracker = new IntersectionObserver(entries => {
 sections.forEach(s => sectionTracker.observe(s));
 
 /* ================================================================
-   5. PIPELINE ANIMATION — start dot travel when section is visible
+   5. WHO IT'S FOR — CLICKABLE CARDS WITH POPUPS
+   ================================================================ */
+function openPopup(popupId) {
+  const popup = document.getElementById(popupId);
+  if (!popup) return;
+  popup.hidden = false;
+  document.body.style.overflow = 'hidden';
+  const firstFocusable = popup.querySelector('.popup-close');
+  if (firstFocusable) firstFocusable.focus();
+  track('usecase_popup_open', { popup: popupId });
+}
+function closePopup(popup) {
+  popup.hidden = true;
+  document.body.style.overflow = '';
+}
+
+document.querySelectorAll('.who-clickable').forEach(card => {
+  const open = () => openPopup(card.dataset.popup);
+  card.addEventListener('click', open);
+  card.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); } });
+});
+
+document.querySelectorAll('.popup-close').forEach(btn => {
+  btn.addEventListener('click', () => closePopup(btn.closest('.who-popup-wrap')));
+});
+
+document.querySelectorAll('.who-popup-wrap').forEach(wrap => {
+  wrap.addEventListener('click', e => { if (e.target === wrap) closePopup(wrap); });
+});
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.who-popup-wrap:not([hidden])').forEach(closePopup);
+    // also close nav
+    if (navLinks?.classList.contains('open')) {
+      navLinks.classList.remove('open');
+      hamburger.classList.remove('open');
+      hamburger.setAttribute('aria-expanded', 'false');
+      hamburger.focus();
+    }
+  }
+});
+
+/* ================================================================
+   6. PIPELINE ANIMATION — start dot travel when section is visible
    ================================================================ */
 const pipelineWrap = document.getElementById('pipeline-wrap');
 if (pipelineWrap) {
@@ -199,13 +243,5 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
 });
 
 /* ================================================================
-   8. KEYBOARD ACCESSIBILITY — close hamburger on Escape
+   8. KEYBOARD ACCESSIBILITY — handled in popup section above
    ================================================================ */
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape' && navLinks?.classList.contains('open')) {
-    navLinks.classList.remove('open');
-    hamburger.classList.remove('open');
-    hamburger.setAttribute('aria-expanded', 'false');
-    hamburger.focus();
-  }
-});
