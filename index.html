@@ -1,440 +1,637 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Legal M1ND – AI Legal Intelligence</title>
-  <meta name="theme-color" content="#0b1220" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Calendly -->
+  <title>M1ND – Behavioural Litigation Intelligence</title>
+  <meta name="description" content="M1ND delivers behavioural litigation intelligence — turning official Indian court data into strategic insights for law firms, institutions, and funders." />
+  <meta name="theme-color" content="#0D1B3E" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Lora:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+
+  <!-- GA4 — replace G-XXXXXXXXXX with your Measurement ID from analytics.google.com (free, 2 min setup) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX', { anonymize_ip: true });
+  </script>
+
+  <!-- Calendly widget CSS -->
   <link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
-  <script src="https://assets.calendly.com/assets/external/widget.js" type="text/javascript" async></script>
-  <style>
-    :root { --brand:#2563eb; --brand-2:#38bdf8; }
-    html { scroll-behavior: smooth; }
-    body { font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
-    .glass { background: rgba(2,6,23,0.6); backdrop-filter: blur(10px); }
-    .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); }
-    .modal-content { background-color: rgb(2 6 23); margin: 5% auto; padding: 20px; border-radius: 16px; width: 90%; max-width: 500px; border: 1px solid rgb(51 65 85); }
-    .close { color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer; }
-    .close:hover, .close:focus { color: #38bdf8; }
-    
-    /* Fallback for broken images */
-    .image-placeholder {
-      background: linear-gradient(135deg, #1e293b, #334155);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 300px;
-      color: #64748b;
-      font-size: 1.2rem;
-      text-align: center;
-      padding: 2rem;
-    }
-    
-    .hero-visual {
-      background: linear-gradient(135deg, #0f172a, #1e293b, #334155);
-      border: 1px solid #334155;
-      position: relative;
-      overflow: hidden;
-    }
-    
-    .hero-visual::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: 
-        radial-gradient(circle at 20% 30%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
-        radial-gradient(circle at 80% 70%, rgba(14, 165, 233, 0.1) 0%, transparent 50%);
-    }
-    
-    .tech-grid {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1rem;
-      opacity: 0.6;
-    }
-    
-    .tech-icon {
-      width: 40px;
-      height: 40px;
-      background: rgba(59, 130, 246, 0.2);
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.2rem;
-    }
-  </style>
+
+  <link rel="stylesheet" href="style.css" />
 </head>
-<body class="bg-slate-950 text-slate-100">
-  <!-- Nav -->
-  <header class="fixed top-0 inset-x-0 z-50 border-b border-slate-800/60 bg-slate-950/80 backdrop-blur">
-    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-      <a href="#top" class="text-xl font-extrabold tracking-tight"><span class="text-slate-100">Legal</span> <span class="text-sky-400">M1ND</span></a>
-      <nav class="hidden md:flex items-center gap-8 font-semibold text-slate-300">
-        <a href="#about" class="hover:text-sky-400">About</a>
-        <a href="#features" class="hover:text-sky-400">Capabilities</a>
-        <a href="#contact" class="hover:text-sky-400">Contact</a>
-        <a href="#platform-details" class="hover:text-sky-400">Platform</a>
-        <button onclick="Calendly.initPopupWidget({url: 'https://calendly.com/92-jain-n/30min'});return false;" class="rounded-full px-5 py-2.5 bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold shadow">
-          Book 1:1
-        </button>
-      </nav>
-    </div>
-  </header>
-  
-  <!-- Hero -->
-  <section id="top" class="pt-32 pb-20 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800">
-    <div class="max-w-5xl mx-auto px-6 text-center">
-      <h1 class="text-4xl md:text-6xl font-extrabold leading-tight">
-        AI-Powered Legal Intelligence for <span class="text-sky-400">Predictable</span> Outcomes
-      </h1>
-      <p class="mt-6 text-lg md:text-xl text-slate-300 max-w-3xl mx-auto">
-        Increase certainty with predictive legal insights, move from reactive → proactive, gain multi-jurisdictional visibility, and optimize resources across your practice.
-      </p>
-      <div class="mt-8 flex flex-wrap justify-center gap-4">
-        <button onclick="Calendly.initPopupWidget({url: 'https://calendly.com/92-jain-n/30min'});return false;" class="rounded-full px-6 py-3 bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold shadow-lg">
-          Book a 1:1 Call
-        </button>
-        <a href="#contact" class="rounded-full px-6 py-3 border border-slate-700 hover:border-sky-500 hover:text-sky-400 font-semibold">
-          Apply / Contact
-        </a>
-      </div>
-    </div>
-  </section>
-  
- <!-- About Section -->
-<section id="about" class="py-16">
-  <div class="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-10 items-center">
-    <!-- Text Column -->
-    <div>
-      <h2 class="text-3xl md:text-4xl font-bold mb-4">About Legal M1ND</h2>
-      <p class="text-slate-300 mb-6">
-        We blend behavioral science with AI to transform how legal teams plan,
-        negotiate, and litigate. Our platform profiles decision-makers, forecasts
-        outcomes, and highlights strategic paths that maximize probability of success.
-      </p>
-      <ul class="text-slate-300 space-y-2 list-disc pl-5">
-        <li>Predictive case, judge, and counsel analytics</li>
-        <li>Cross-border regulatory & compliance intelligence</li>
-        <li>Optimization of teams, spend, and timelines</li>
-      </ul>
-    </div>
-    <!-- Logo Column -->
-    <div class="flex justify-center md:justify-end">
-      <img
-        src="Legal M1ND Logo.png"
-        alt="Legal M1ND Logo"
-        class="max-h-48 object-contain"
-      />
+<body>
+
+<!-- ════════════════════════════════════════════
+     NAVIGATION — persistent, always visible
+     ════════════════════════════════════════════ -->
+<header class="nav-bar" id="navbar">
+  <div class="nav-inner">
+    <a href="#top" class="nav-logo" aria-label="M1ND — home">
+      <img src="logo-transparent.png" alt="M1ND" class="nav-logo-img" />
+      <span class="nav-wordmark"><span class="gold">M1ND</span></span>
+    </a>
+    <nav class="nav-links" id="navLinks" role="navigation">
+      <a href="#what-we-do" class="nav-link" data-cta="nav_what">What We Do</a>
+      <a href="#data"       class="nav-link" data-cta="nav_data">The Data</a>
+      <a href="#who"        class="nav-link" data-cta="nav_who">Who It's For</a>
+      <a href="#contact"    class="nav-link nav-cta" data-cta="nav_contact">Get in Touch</a>
+    </nav>
+    <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+
+<!-- ════════════════════════════════════════════
+     HERO
+     ════════════════════════════════════════════ -->
+<section id="top" class="hero">
+  <div class="hero-bg" aria-hidden="true"></div>
+  <div class="container hero-inner">
+    <p class="hero-kicker reveal">Behavioural Litigation Intelligence</p>
+    <h1 class="hero-title reveal" style="--d:.1s">
+      Search ≠ Strategy.<br><em>Data is everywhere — intelligence is not.</em>
+    </h1>
+    <p class="hero-sub reveal" style="--d:.2s">
+      M1ND transforms the public judgment record into structured, auditable intelligence — giving legal professionals the strategic clarity to act before the moment, not after it.
+    </p>
+    <div class="hero-actions reveal" style="--d:.3s">
+      <a href="#contact" class="btn-primary" data-cta="hero_request">Request an Intelligence Briefing</a>
+      <a href="#what-we-do" class="btn-ghost" data-cta="hero_learn">What we surface →</a>
     </div>
   </div>
 </section>
-            </div>
-            <div class="relative z-10 text-center">
-              <h3 class="text-xl font-semibold text-sky-400 mb-2">AI + Legal Intelligence</h3>
-              <p class="text-slate-400">Transforming Legal Practice</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-  
-  <!-- Capabilities / Pillars -->
-  <section id="features" class="py-16 bg-slate-900/60">
-    <div class="max-w-6xl mx-auto px-6">
-      <h2 class="text-3xl md:text-4xl font-bold text-center mb-12">Core Value Pillars</h2>
-      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div class="glass rounded-2xl p-6 ring-1 ring-slate-800 hover:ring-sky-600 transition">
-          <h3 class="text-xl font-semibold text-sky-400 mb-2">🔮 Predictive Legal Insights</h3>
-          <p class="text-slate-300">Reduce ambiguity with outcome forecasting and strategy simulation.</p>
-        </div>
-        <div class="glass rounded-2xl p-6 ring-1 ring-slate-800 hover:ring-sky-600 transition">
-          <h3 class="text-xl font-semibold text-sky-400 mb-2">⚡ Reactive → Proactive</h3>
-          <p class="text-slate-300">Shift from firefighting to foresight with early signals and planning.</p>
-        </div>
-        <div class="glass rounded-2xl p-6 ring-1 ring-slate-800 hover:ring-sky-600 transition">
-          <h3 class="text-xl font-semibold text-sky-400 mb-2">📊 Resource Optimization</h3>
-          <p class="text-slate-300">Allocate time, talent, and budgets using evidence, not intuition.</p>
-        </div>
-        <div class="glass rounded-2xl p-6 ring-1 ring-slate-800 hover:ring-sky-600 transition">
-          <h3 class="text-xl font-semibold text-sky-400 mb-2">🌍 Multi‑Jurisdictional Insights</h3>
-          <p class="text-slate-300">Compare venues and strategies across jurisdictions in one view.</p>
-        </div>
-      </div>
-    </div>
-  </section>
 
-  <!-- Platform Details Section -->
-  <section id="platform-details" class="py-16">
-    <div class="max-w-6xl mx-auto px-6">
-      <h2 class="text-3xl md:text-4xl font-bold text-center mb-4">Platform Capabilities</h2>
-      <p class="text-center text-slate-300 mb-12">Discover how Legal M1ND transforms legal practice with AI-driven intelligence</p>
-      
-      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-        <!-- Behavioral Analytics -->
-        <div class="glass rounded-2xl p-6 ring-1 ring-slate-800">
-          <div class="text-3xl mb-4">🧠</div>
-          <h3 class="text-xl font-semibold text-sky-400 mb-3">Behavioral Analytics</h3>
-          <p class="text-slate-300 mb-4">Profile judges, arbitrators, and opposing counsel using OCEAN 5 personality model and behavioral patterns.</p>
-          <ul class="text-sm text-slate-400 space-y-1">
-            <li>• Judicial decision tendencies</li>
-            <li>• Opposing counsel strategies</li>
-            <li>• Communication style analysis</li>
-          </ul>
-        </div>
 
-        <!-- Predictive Analytics -->
-        <div class="glass rounded-2xl p-6 ring-1 ring-slate-800">
-          <div class="text-3xl mb-4">🔮</div>
-          <h3 class="text-xl font-semibold text-sky-400 mb-3">Predictive Analytics</h3>
-          <p class="text-slate-300 mb-4">Anticipate case outcomes and settlement opportunities with AI-powered forecasting.</p>
-          <ul class="text-sm text-slate-400 space-y-1">
-            <li>• Case outcome probability</li>
-            <li>• Settlement opportunity detection</li>
-            <li>• Strategy simulation modeling</li>
-          </ul>
-        </div>
+<!-- ════════════════════════════════════════════
+     THE PROBLEM
+     ════════════════════════════════════════════ -->
+<section id="problem" class="section bg-alt">
+  <div class="container narrow">
+    <p class="section-label">The problem we solve</p>
+    <h2 class="section-title">Strategy built on impressions.<br>Not on evidence.</h2>
+    <p class="section-body">
+      A litigation counsel profiles a judge from three or four personal appearances. A junior writes a narrative summary. That is the strategy — built on instinct, not the record. The opponent knows the same things you don't.
+    </p>
+    <p class="section-body">
+      Decades of decisions, patterns, and precedent sit inside published Indian court records — structured, searchable, and waiting. M1ND makes that intelligence computable, auditable, and ready before the moment you need it.
+    </p>
+  </div>
+</section>
 
-        <!-- Document Intelligence -->
-        <div class="glass rounded-2xl p-6 ring-1 ring-slate-800">
-          <div class="text-3xl mb-4">📄</div>
-          <h3 class="text-xl font-semibold text-sky-400 mb-3">Document Intelligence</h3>
-          <p class="text-slate-300 mb-4">AI-powered contract analysis with risk pattern identification and clause-level insights.</p>
-          <ul class="text-sm text-slate-400 space-y-1">
-            <li>• Risk pattern identification</li>
-            <li>• Contract clause analysis</li>
-            <li>• Document categorization</li>
-          </ul>
-        </div>
 
-        <!-- RegTech & Compliance -->
-        <div class="glass rounded-2xl p-6 ring-1 ring-slate-800">
-          <div class="text-3xl mb-4">⚖️</div>
-          <h3 class="text-xl font-semibold text-sky-400 mb-3">RegTech & Compliance</h3>
-          <p class="text-slate-300 mb-4">Continuous regulatory monitoring with automated compliance assessment and risk scoring.</p>
-          <ul class="text-sm text-slate-400 space-y-1">
-            <li>• Regulatory change monitoring</li>
-            <li>• Automated compliance assessment</li>
-            <li>• Risk exposure scoring</li>
-          </ul>
-        </div>
+<!-- ════════════════════════════════════════════
+     WHAT WE DO — four intelligence streams
+     ════════════════════════════════════════════ -->
+<section id="what-we-do" class="section">
+  <div class="container">
+    <p class="section-label">Four intelligence streams</p>
+    <h2 class="section-title">One briefing.<br>Every decision-critical signal.</h2>
+    <p class="section-body centered">From courts and tribunals to arbitration and M&amp;A — wherever a high-stakes decision is made by an identifiable decision-maker.</p>
 
-        <!-- Negotiation Intelligence -->
-        <div class="glass rounded-2xl p-6 ring-1 ring-slate-800">
-          <div class="text-3xl mb-4">🤝</div>
-          <h3 class="text-xl font-semibold text-sky-400 mb-3">Negotiation Intelligence</h3>
-          <p class="text-slate-300 mb-4">Simulate offers, predict counter-positions, and optimize win-win scenario modeling.</p>
-          <ul class="text-sm text-slate-400 space-y-1">
-            <li>• Counterpart behavioral analysis</li>
-            <li>• Win-win scenario modeling</li>
-            <li>• Negotiation strategy optimization</li>
-          </ul>
-        </div>
+    <div class="streams-grid">
 
-        <!-- Strategy Optimization -->
-        <div class="glass rounded-2xl p-6 ring-1 ring-slate-800">
-          <div class="text-3xl mb-4">🎯</div>
-          <h3 class="text-xl font-semibold text-sky-400 mb-3">Strategy Optimization</h3>
-          <p class="text-slate-300 mb-4">Early conflict identification with post-resolution relationship management.</p>
-          <ul class="text-sm text-slate-400 space-y-1">
-            <li>• Early conflict identification</li>
-            <li>• Strategic recommendations</li>
-            <li>• Post-resolution management</li>
+      <div class="stream-card reveal">
+        <div class="stream-icon">
+          <svg viewBox="0 0 40 40" fill="none" aria-hidden="true">
+            <path d="M20 4v32M8 36h24" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            <path d="M20 8L8 18M20 8l12 10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            <circle cx="8" cy="22" r="4" stroke="currentColor" stroke-width="1.5"/>
+            <circle cx="32" cy="22" r="4" stroke="currentColor" stroke-width="1.5"/>
+          </svg>
+        </div>
+        <h3>Decision-Forum Intelligence</h3>
+        <p>How decision-makers at every level have ruled, reasoned, and responded — across courts, arbitration panels, tribunals, and regulatory forums.</p>
+        <div class="stream-tease">
+          <p class="tease-intro">What you might discover</p>
+          <ul>
+            <li>How a forum has decided across thousands of comparable matters</li>
+            <li>The arguments and precedents that carry weight</li>
+            <li>Patterns across panel compositions and multi-member forums</li>
           </ul>
         </div>
       </div>
 
-      <!-- Request More Details CTA -->
-      <div class="text-center">
-        <button onclick="openDetailsModal()" class="rounded-full px-8 py-4 bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-white font-bold shadow-lg text-lg">
-          Request Detailed Platform Information
-        </button>
-        <p class="text-slate-400 mt-3">Get comprehensive documentation, case studies, and implementation details</p>
-      </div>
-    </div>
-  </section>
-  
-  <!-- Contact / Booking -->
-  <section id="contact" class="py-20 bg-slate-900/60">
-    <div class="max-w-6xl mx-auto px-6">
-      <h2 class="text-3xl md:text-4xl font-bold text-center mb-4">Get in Touch</h2>
-      <p class="text-center text-slate-300 mb-10">Book a 1:1 call or share details via the form — we'll respond within 24 hours.</p>
-      
-      <!-- Contact Info Card -->
-      <div class="max-w-md mx-auto mb-12 glass rounded-2xl p-6 ring-1 ring-slate-800 text-center">
-        <h3 class="text-lg font-semibold text-sky-400 mb-4">Contact Information</h3>
-        <div class="space-y-3 text-slate-300">
-          <div>
-            <p class="font-semibold">Email</p>
-            <a href="mailto:info@m1nd.in" class="text-sky-400 hover:text-sky-300">info@m1nd.in</a>
-          </div>
-          <div>
-            <p class="font-semibold">Phone</p>
-            <a href="tel:+971561050476" class="text-sky-400 hover:text-sky-300">+971 56 105 0476</a>
-          </div>
-          <div>
-            <p class="font-semibold">Connect</p>
-            <a href="https://www.linkedin.com/in/nipun-jain-7046a3162/" target="_blank" class="text-sky-400 hover:text-sky-300">LinkedIn Profile</a>
-          </div>
+      <div class="stream-card reveal">
+        <div class="stream-icon">
+          <svg viewBox="0 0 40 40" fill="none" aria-hidden="true">
+            <rect x="6" y="14" width="28" height="20" rx="3" stroke="currentColor" stroke-width="1.8"/>
+            <path d="M14 14v-4a6 6 0 0 1 12 0v4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            <path d="M6 24h28" stroke="currentColor" stroke-width="1.5" stroke-dasharray="2 2"/>
+          </svg>
+        </div>
+        <h3>Counterpart Intelligence</h3>
+        <p>The patterns behind how opposing counsel argues, how a negotiating counterpart behaves, and where each side has been strong or vulnerable.</p>
+        <div class="stream-tease">
+          <p class="tease-intro">What you might discover</p>
+          <ul>
+            <li>How the other side has argued and negotiated comparable matters</li>
+            <li>Approaches that have worked against similar positions</li>
+            <li>Behavioural signals under pressure</li>
+          </ul>
         </div>
       </div>
 
-      <div class="grid lg:grid-cols-2 gap-8">
-        <!-- Calendly Inline -->
-        <div class="rounded-2xl ring-1 ring-slate-800 overflow-hidden bg-slate-900/50">
-          <div class="p-5 border-b border-slate-800 flex items-center justify-between">
-            <h3 class="text-lg font-semibold">Schedule a 1:1 with Us</h3>
-            <button onclick="Calendly.initPopupWidget({url: 'https://calendly.com/92-jain-n/30min'});return false;" class="rounded-full px-4 py-2 bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold">Open Popup</button>
-          </div>
-          <div class="calendly-inline-widget" data-url="https://calendly.com/92-jain-n/30min?hide_landing_page_details=1&hide_gdpr_banner=1" style="min-width:320px;height:760px;"></div>
+      <div class="stream-card reveal">
+        <div class="stream-icon">
+          <svg viewBox="0 0 40 40" fill="none" aria-hidden="true">
+            <path d="M10 6h20a2 2 0 0 1 2 2v24a2 2 0 0 1-2 2H10a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z" stroke="currentColor" stroke-width="1.8"/>
+            <path d="M14 14h12M14 20h12M14 26h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
         </div>
-        
-        <!-- Google Form -->
-        <div class="rounded-2xl ring-1 ring-slate-800 overflow-hidden bg-slate-900/50">
-          <div class="p-5 border-b border-slate-800">
-            <h3 class="text-lg font-semibold">Share Your Details</h3>
-          </div>
-          <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSdxVDxaej04Lfkrunj48P7GZWeaxS9V59yE3NVT84N4J16Nzw/viewform?embedded=true" class="w-full" style="height:760px;" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
+        <h3>Law Intelligence</h3>
+        <p>Not what a statute says — but how courts and tribunals have actually applied it across thousands of decisions, and what that means for your matter.</p>
+        <div class="stream-tease">
+          <p class="tease-intro">What you might discover</p>
+          <ul>
+            <li>How this forum interprets a specific statute or clause in practice</li>
+            <li>Arguments that have moved decision-makers in similar matters</li>
+            <li>How the same law is applied differently across jurisdictions</li>
+          </ul>
         </div>
       </div>
-    </div>
-  </section>
 
-  <!-- Request Details Modal -->
-  <div id="detailsModal" class="modal">
-    <div class="modal-content">
-      <span class="close" onclick="closeDetailsModal()">&times;</span>
-      <h2 class="text-2xl font-bold mb-6 text-sky-400">Request Platform Details</h2>
-      <p class="text-slate-300 mb-6">Get comprehensive information about Legal M1ND's capabilities, case studies, and implementation details.</p>
-      
-      <form id="detailsForm" action="mailto:info@m1nd.in" method="post" enctype="text/plain">
-        <div class="space-y-4">
-          <div>
-            <label for="detailName" class="block text-sm font-medium text-slate-300 mb-2">Full Name *</label>
-            <input type="text" id="detailName" name="name" required class="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-slate-100 focus:ring-2 focus:ring-sky-500 focus:border-transparent">
-          </div>
-          
-          <div>
-            <label for="detailEmail" class="block text-sm font-medium text-slate-300 mb-2">Email Address *</label>
-            <input type="email" id="detailEmail" name="email" required class="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-slate-100 focus:ring-2 focus:ring-sky-500 focus:border-transparent">
-          </div>
-          
-          <div>
-            <label for="detailPhone" class="block text-sm font-medium text-slate-300 mb-2">Phone Number *</label>
-            <input type="tel" id="detailPhone" name="phone" required class="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-slate-100 focus:ring-2 focus:ring-sky-500 focus:border-transparent">
-          </div>
-          
-          <div>
-            <label for="detailCompany" class="block text-sm font-medium text-slate-300 mb-2">Company/Organization</label>
-            <input type="text" id="detailCompany" name="company" class="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-slate-100 focus:ring-2 focus:ring-sky-500 focus:border-transparent">
-          </div>
-          
-          <div>
-            <label for="detailInterest" class="block text-sm font-medium text-slate-300 mb-2">Areas of Interest</label>
-            <select id="detailInterest" name="interest" class="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-slate-100 focus:ring-2 focus:ring-sky-500 focus:border-transparent">
-              <option value="">Select your interest...</option>
-              <option value="platform-demo">Platform Demo</option>
-              <option value="implementation">Implementation Details</option>
-              <option value="pricing">Pricing & Packages</option>
-              <option value="case-studies">Case Studies</option>
-              <option value="technical-specs">Technical Specifications</option>
-              <option value="partnership">Partnership Opportunities</option>
-            </select>
-          </div>
+      <div class="stream-card reveal">
+        <div class="stream-icon">
+          <svg viewBox="0 0 40 40" fill="none" aria-hidden="true">
+            <path d="M6 32l8-10 6 5 6-8 8 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="6" cy="32" r="2" fill="currentColor"/>
+            <circle cx="34" cy="25" r="2" fill="currentColor"/>
+          </svg>
         </div>
-        
-        <div class="flex gap-4 mt-8">
-          <button type="submit" class="flex-1 rounded-full px-6 py-3 bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold">
-            Send Request
-          </button>
-          <button type="button" onclick="closeDetailsModal()" class="px-6 py-3 border border-slate-700 rounded-full text-slate-300 hover:border-slate-600">
-            Cancel
-          </button>
+        <h3>Strategy &amp; Scenario Intelligence</h3>
+        <p>Outcome modelling, settlement signals, and scenario planning — for litigation, arbitration, commercial negotiations, and M&amp;A due diligence.</p>
+        <div class="stream-tease">
+          <p class="tease-intro">What you might discover</p>
+          <ul>
+            <li>The likely range of outcomes and their probabilities</li>
+            <li>When and how to position for settlement or escalation</li>
+            <li>How earlier comparable decisions shape your exposure</li>
+          </ul>
         </div>
-      </form>
+      </div>
+
     </div>
   </div>
-  
-  <!-- Footer -->
-  <footer class="border-t border-slate-800/60 bg-slate-950 py-8">
-    <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4">
-      <p class="text-slate-400">© 2025 Legal M1ND. All rights reserved.</p>
-     
+</section>
+
+
+<!-- ════════════════════════════════════════════
+     DATA SCALE
+     ════════════════════════════════════════════ -->
+<section id="data" class="section bg-alt">
+  <div class="container">
+    <p class="section-label">The scale behind the intelligence</p>
+    <h2 class="section-title">Built from the official record.<br>Growing with every court.</h2>
+    <p class="section-body centered">A snapshot of what is live and indexed today — this corpus expands with every new ingestion run.</p>
+
+    <div class="stats-grid">
+      <div class="stat-card reveal">
+        <div class="stat-num" data-target="157508">0</div>
+        <div class="stat-label">Cases Ingested</div>
+        <div class="stat-sub">Patna High Court · 2021–2025</div>
+      </div>
+      <div class="stat-card reveal">
+        <div class="stat-num" data-target="4.1" data-decimals="1" data-suffix="M">0</div>
+        <div class="stat-label">Named Entity Extractions</div>
+        <div class="stat-sub">Judges · lawyers · statutes · organisations</div>
+      </div>
+      <div class="stat-card reveal">
+        <div class="stat-num" data-target="47907">0</div>
+        <div class="stat-label">Statute Interpretations</div>
+        <div class="stat-sub">How courts actually apply each law</div>
+      </div>
+      <div class="stat-card reveal">
+        <div class="stat-num" data-target="200" data-suffix="+">0</div>
+        <div class="stat-label">Judicial Profiles</div>
+        <div class="stat-sub">Behavioural signals computed</div>
+      </div>
     </div>
-  </footer>
-  
-  <!-- Calendly floating badge with brand colors -->
-  <script>
-    window.addEventListener('load', function () {
-      if (window.Calendly) {
-        Calendly.initBadgeWidget({
-          url: 'https://calendly.com/92-jain-n/30min',
-          text: 'Schedule time with me',
-          color: '#2563eb',        // Tailwind blue-600
-          textColor: '#ffffff',
-          branding: false
-        });
-      }
-    });
 
-    // Modal functions
-    function openDetailsModal() {
-      document.getElementById('detailsModal').style.display = 'block';
-    }
+    <p class="data-grow reveal">
+      <svg viewBox="0 0 18 18" fill="none" aria-hidden="true" width="18" height="18">
+        <path d="M9 3v12M3 9l6-6 6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      Expanding across courts, jurisdictions, and data sources. More coming soon.
+    </p>
 
-    function closeDetailsModal() {
-      document.getElementById('detailsModal').style.display = 'none';
-    }
+  </div>
+</section>
 
-    // Close modal when clicking outside of it
-    window.onclick = function(event) {
-      const modal = document.getElementById('detailsModal');
-      if (event.target == modal) {
-        modal.style.display = 'none';
-      }
-    }
 
-    // Handle form submission
-    document.getElementById('detailsForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-      
-      const formData = new FormData(this);
-      const name = formData.get('name');
-      const email = formData.get('email');
-      const phone = formData.get('phone');
-      const company = formData.get('company');
-      const interest = formData.get('interest');
-      
-      const subject = 'Platform Details Request - Legal M1ND';
-      const body = `New platform details request:
+<!-- ════════════════════════════════════════════
+     WHO IT'S FOR — clickable cards with use-case popups
+     ════════════════════════════════════════════ -->
+<section id="who" class="section">
+  <div class="container">
+    <p class="section-label">Built for those with the most to lose</p>
+    <h2 class="section-title">Four types of professionals.<br>One intelligence platform.</h2>
+    <p class="section-body centered">Click any card to see exactly what M1ND surfaces for each audience.</p>
 
-Name: ${name}
-Email: ${email}
-Phone: ${phone}
-Company: ${company || 'Not specified'}
-Interest: ${interest || 'General inquiry'}
+    <div class="who-grid" id="who-grid">
 
-Please send detailed information about Legal M1ND's platform capabilities.`;
+      <!-- Card 1: Lawyers -->
+      <div class="who-card reveal who-clickable" data-popup="popup-lawyers" role="button" tabindex="0" aria-expanded="false">
+        <div class="who-icon">
+          <svg viewBox="0 0 32 32" fill="none" aria-hidden="true">
+            <circle cx="16" cy="10" r="6" stroke="currentColor" stroke-width="1.6"/>
+            <path d="M4 28c0-6.627 5.373-12 12-12s12 5.373 12 12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <h3>Lawyers &amp; Litigation Counsel</h3>
+        <p>The individual practitioner who walks into court — and needs to walk in better prepared than anyone in the room.</p>
+        <div class="who-hint">Tap to see the use case →</div>
+      </div>
 
-      const mailtoLink = `mailto:info@m1nd.in?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-      window.location.href = mailtoLink;
-      
-      closeDetailsModal();
-      
-      // Show confirmation
-      alert('Your request has been prepared. Your email client should open with the request details.');
-    });
-  </script>
+      <!-- Card 2: Law Firms -->
+      <div class="who-card reveal who-clickable" data-popup="popup-firms" role="button" tabindex="0" aria-expanded="false">
+        <div class="who-icon">
+          <svg viewBox="0 0 32 32" fill="none" aria-hidden="true">
+            <path d="M4 28V12L16 4l12 8v16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            <rect x="10" y="18" width="12" height="10" stroke="currentColor" stroke-width="1.4"/>
+            <path d="M13 28v-5h6v5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <h3>Law Firms</h3>
+        <p>Practice development, partner-to-matter allocation, and client outcomes — powered by data across the full case record, not senior intuition.</p>
+        <div class="who-hint">Tap to see the use case →</div>
+      </div>
+
+      <!-- Card 3: Corporate Legal -->
+      <div class="who-card reveal who-clickable" data-popup="popup-corporate" role="button" tabindex="0" aria-expanded="false">
+        <div class="who-icon">
+          <svg viewBox="0 0 32 32" fill="none" aria-hidden="true">
+            <rect x="3" y="9" width="26" height="18" rx="2" stroke="currentColor" stroke-width="1.6"/>
+            <path d="M10 9V7a6 6 0 0 1 12 0v2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+            <path d="M3 17h26" stroke="currentColor" stroke-width="1.3" stroke-dasharray="2 2"/>
+          </svg>
+        </div>
+        <h3>Corporate Legal Departments</h3>
+        <p>In-house counsel who need to brief complex disputes and regulatory matters before handing them to external counsel — without wasting senior-partner time on groundwork.</p>
+        <div class="who-hint">Tap to see the use case →</div>
+      </div>
+
+      <!-- Card 4: Government / Ministry -->
+      <div class="who-card reveal who-clickable" data-popup="popup-govt" role="button" tabindex="0" aria-expanded="false">
+        <div class="who-icon">
+          <svg viewBox="0 0 32 32" fill="none" aria-hidden="true">
+            <path d="M2 28h28M6 28V14M26 28V14M2 14l14-10 14 10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            <rect x="12" y="20" width="8" height="8" stroke="currentColor" stroke-width="1.4"/>
+          </svg>
+        </div>
+        <h3>Ministry of Justice &amp; Judiciary</h3>
+        <p>Court administration, cause-list analytics, and systemic efficiency — aligned with eCourts Phase III and the Department of Justice's access-to-justice mandate.</p>
+        <div class="who-hint">Tap to see the use case →</div>
+      </div>
+
+    </div>
+
+    <!-- Use-case popups (hidden by default, open on card click) -->
+    <div class="who-popup-wrap" id="popup-lawyers" role="dialog" aria-modal="true" aria-label="Lawyers use case" hidden>
+      <div class="who-popup">
+        <button class="popup-close" aria-label="Close">✕</button>
+        <div class="popup-tag">Lawyers &amp; Litigation Counsel</div>
+        <h3 class="popup-title">12 hours before your hearing — here's what is ready.</h3>
+        <p class="popup-scenario">A litigation counsel opens a judge's profile before a bail hearing. M1ND surfaces the full decision-making pattern from thousands of cases: bail grant rate by offence cluster, language style, bench dynamics, and a one-sentence strategic implication.</p>
+        <div class="popup-features">
+          <div class="pf"><span class="pf-dot gold"></span>Bail grant rates, dismissal patterns, and bench dynamics across the full judgment record</div>
+          <div class="pf"><span class="pf-dot gold"></span>Your opponent's procedural tactics and settlement posture from the prior 24 months</div>
+          <div class="pf"><span class="pf-dot gold"></span>How this court has applied the relevant statute — the "spirit of the law" from 47,907 interpretations</div>
+          <div class="pf"><span class="pf-dot gold"></span>Counter-argument structure derived from your opponent's historical patterns</div>
+          <div class="pf"><span class="pf-dot gold"></span>One strategic implication, stated explicitly — what to lead with, what to avoid</div>
+        </div>
+        <div class="popup-result">"The hearing is the same. The preparation is not."</div>
+      </div>
+    </div>
+
+    <div class="who-popup-wrap" id="popup-firms" role="dialog" aria-modal="true" aria-label="Law Firms use case" hidden>
+      <div class="who-popup">
+        <button class="popup-close" aria-label="Close">✕</button>
+        <div class="popup-tag">Law Firms</div>
+        <h3 class="popup-title">Practice development driven by data, not precedent and personality.</h3>
+        <p class="popup-scenario">A managing partner building an IPR practice reviews bench-affinity analytics across multiple High Courts — disposition velocity, partner-to-bench historical alignment, case-pipeline complexity ratios. Partner-to-matter decisions made on intelligence, not seniority.</p>
+        <div class="popup-features">
+          <div class="pf"><span class="pf-dot gold"></span>Bench-affinity analytics: which partners perform best before which benches</div>
+          <div class="pf"><span class="pf-dot gold"></span>Practice niche development: where the firm's historical strengths are, by court and matter type</div>
+          <div class="pf"><span class="pf-dot gold"></span>Case-pipeline prioritisation by complexity-to-outcome ratio</div>
+          <div class="pf"><span class="pf-dot gold"></span>Cross-jurisdictional insights for firms appearing before multiple HCs</div>
+          <div class="pf"><span class="pf-dot gold"></span>Client retention through consistent, intelligence-backed outcomes</div>
+        </div>
+        <div class="popup-result">"Intelligence-enhanced practice, not just faster search."</div>
+      </div>
+    </div>
+
+    <div class="who-popup-wrap" id="popup-corporate" role="dialog" aria-modal="true" aria-label="Corporate Legal use case" hidden>
+      <div class="who-popup">
+        <button class="popup-close" aria-label="Close">✕</button>
+        <div class="popup-tag">Corporate Legal Departments</div>
+        <h3 class="popup-title">Pre-brief before you escalate. Hand over the strategic questions, not the groundwork.</h3>
+        <p class="popup-scenario">In-house counsel queries the platform before escalating a regulatory matter to external counsel. The platform returns: the regulator's enforcement posture from historical filings, procedural response patterns with success-rate annotations, and the court's interpretive history for the invoked statutory provision.</p>
+        <div class="popup-features">
+          <div class="pf"><span class="pf-dot gold"></span>Regulator enforcement posture and precedent landscape before any formal engagement</div>
+          <div class="pf"><span class="pf-dot gold"></span>Statutory interpretation history for the specific provision at issue</div>
+          <div class="pf"><span class="pf-dot gold"></span>External counsel receives a fully pre-briefed matter — partner time reserved for strategy</div>
+          <div class="pf"><span class="pf-dot gold"></span>M&amp;A target company legal exposure mapped from the full enforcement record</div>
+          <div class="pf"><span class="pf-dot gold"></span>Reduction in outside-counsel cost by 20–30% on substantive groundwork</div>
+        </div>
+        <div class="popup-result">"Reduce what goes to external counsel to the questions only they can answer."</div>
+      </div>
+    </div>
+
+    <div class="who-popup-wrap" id="popup-govt" role="dialog" aria-modal="true" aria-label="Government use case" hidden>
+      <div class="who-popup">
+        <button class="popup-close" aria-label="Close">✕</button>
+        <div class="popup-tag">Ministry of Justice &amp; Judiciary</div>
+        <h3 class="popup-title">The cause list, intelligently briefed. 30 seconds per matter.</h3>
+        <p class="popup-scenario">Before the day's cause list, each matter has a structured brief drawn from the public record: time on docket, how similar matters have been disposed, applicable statutory interpretations, and a disposition-velocity signal. No additional workload — drawn from what already exists.</p>
+        <div class="popup-features">
+          <div class="pf"><span class="pf-dot gold"></span>Cause-list briefings: case history, statutory pattern, comparable disposals — per matter</div>
+          <div class="pf"><span class="pf-dot gold"></span>Backlog triage: identify the 49 lakh cases pending over 10 years by matter type and complexity</div>
+          <div class="pf"><span class="pf-dot gold"></span>Disposition-velocity analytics by bench composition and matter type</div>
+          <div class="pf"><span class="pf-dot gold"></span>Aligned with eCourts Phase III infrastructure — no new data collection required</div>
+          <div class="pf"><span class="pf-dot gold"></span>Supports the Department of Justice's "Access to Justice" mandate — doj.gov.in</div>
+        </div>
+        <div class="popup-result">"30 seconds per matter. Every matter briefed. The record made computable."</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════════
+     BEYOND THE COURTROOM
+     ════════════════════════════════════════════ -->
+<section id="beyond" class="section bg-alt">
+  <div class="container">
+    <p class="section-label">Wherever a decision changes everything</p>
+    <h2 class="section-title">Beyond the courtroom.</h2>
+    <p class="section-body centered">The same intelligence infrastructure applies to every forum where a high-stakes decision is made by an identifiable decision-maker.</p>
+
+    <div class="beyond-grid">
+      <div class="beyond-card reveal">
+        <div class="beyond-icon">
+          <svg viewBox="0 0 36 36" fill="none"><path d="M18 4v28M6 32h24" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M18 8L6 18M18 8l12 10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="6" cy="22" r="4" stroke="currentColor" stroke-width="1.4"/><circle cx="30" cy="22" r="4" stroke="currentColor" stroke-width="1.4"/></svg>
+        </div>
+        <h3>Commercial Arbitration</h3>
+        <p>Arbitrators have published awards, procedural preferences, and timing patterns. Know your arbitrator before you file — SIAC, ICC, DIAC, and domestic panels.</p>
+      </div>
+      <div class="beyond-card reveal">
+        <div class="beyond-icon">
+          <svg viewBox="0 0 36 36" fill="none"><rect x="4" y="8" width="28" height="20" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M4 14h28" stroke="currentColor" stroke-width="1.4" stroke-dasharray="2 2"/><path d="M12 21h12M12 25h8" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+        </div>
+        <h3>M&amp;A &amp; Corporate Transactions</h3>
+        <p>Regulatory approval posture — CCI, SEBI, RBI. Target company legal exposure from the full enforcement history. Counterpart intelligence in high-stakes negotiations.</p>
+      </div>
+      <div class="beyond-card reveal">
+        <div class="beyond-icon">
+          <svg viewBox="0 0 36 36" fill="none"><path d="M4 30l8-10 6 5 6-8 8 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M28 10v6M25 13h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+        <h3>Settlement &amp; Negotiation</h3>
+        <p>Settlement curve modelling, leverage signals, and timing intelligence — when to push, when to settle, what the counterpart's history says about where they fold.</p>
+      </div>
+      <div class="beyond-card reveal">
+        <div class="beyond-icon">
+          <svg viewBox="0 0 36 36" fill="none"><circle cx="18" cy="18" r="14" stroke="currentColor" stroke-width="1.6"/><path d="M4 18h28M18 4a22 22 0 0 1 0 28M18 4a22 22 0 0 0 0 28" stroke="currentColor" stroke-width="1.3"/></svg>
+        </div>
+        <h3>Cross-Jurisdictional Intelligence</h3>
+        <p>How the same statute is applied differently across Patna, Gujarat, Bombay, Delhi HCs, and the Supreme Court. Choose your forum with intelligence, not assumption.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════════
+     TRUST / CREDIBILITY
+     ════════════════════════════════════════════ -->
+<section id="trust" class="section bg-alt">
+  <div class="container">
+    <p class="section-label">Built on rigour</p>
+    <h2 class="section-title">Every signal can be questioned.<br>Every score has a receipt.</h2>
+
+    <div class="trust-grid">
+      <div class="trust-card reveal">
+        <div class="trust-icon">
+          <svg viewBox="0 0 32 32" fill="none" aria-hidden="true">
+            <path d="M16 3L5 8v8c0 6.627 4.925 12.822 11 14 6.075-1.178 11-7.373 11-14V8L16 3z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+            <path d="M11 16l3.5 3.5 6-6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <h3>Official government sources</h3>
+        <p>Sourced exclusively from public Indian court records and government-maintained legal databases. Not scraped. Not estimated.</p>
+      </div>
+      <div class="trust-card reveal">
+        <div class="trust-icon">
+          <svg viewBox="0 0 32 32" fill="none" aria-hidden="true">
+            <path d="M16 4L4 10l12 6 12-6-12-6z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+            <path d="M4 10v8M28 10v8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+            <path d="M8 13v5c0 2.761 3.582 5 8 5s8-2.239 8-5v-5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <h3>Peer-reviewed methodology</h3>
+        <p>Built on over three decades of published research in computational legal reasoning. Methods that courts, academics, and institutions can audit.</p>
+      </div>
+      <div class="trust-card reveal">
+        <div class="trust-icon">
+          <svg viewBox="0 0 32 32" fill="none" aria-hidden="true">
+            <rect x="6" y="14" width="20" height="14" rx="3" stroke="currentColor" stroke-width="1.6"/>
+            <path d="M10 14v-4a6 6 0 0 1 12 0v4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+            <circle cx="16" cy="21" r="2" fill="currentColor"/>
+          </svg>
+        </div>
+        <h3>Indian infrastructure · Data sovereignty</h3>
+        <p>Processed on Indian infrastructure. Public records only. Privacy by design.</p>
+      </div>
+      <div class="trust-card reveal">
+        <div class="trust-icon">
+          <svg viewBox="0 0 32 32" fill="none" aria-hidden="true">
+            <path d="M13 19l-4 4a4 4 0 0 0 5.657 5.657l8-8A4 4 0 0 0 17 15" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+            <path d="M19 13l4-4a4 4 0 0 0-5.657-5.657l-8 8A4 4 0 0 0 15 17" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <h3>Auditable, not opaque</h3>
+        <p>Every signal traces to its source. Methodology is versioned and documented. The intelligence we deliver can be questioned, examined, and defended.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════════
+     PIPELINE TEASER — animated SVG
+     ════════════════════════════════════════════ -->
+<section id="pipeline" class="section">
+  <div class="container">
+    <p class="section-label">The platform</p>
+    <h2 class="section-title">From public record<br>to strategic intelligence.</h2>
+    <p class="section-body centered">
+      A deeply engineered pipeline — official government data → structured analysis → auditable briefing.
+    </p>
+
+    <!-- Desktop pipeline — tooltips replaced with static descriptions (no overflow-clip issue) -->
+    <div class="pipeline-wrap reveal" id="pipeline-wrap">
+      <div class="p-node" tabindex="0" role="button">
+        <div class="p-dot pulse"></div>
+        <div class="p-box">
+          <div class="p-icon">
+            <svg viewBox="0 0 28 28" fill="none" aria-hidden="true"><rect x="4" y="4" width="20" height="20" rx="3" stroke="currentColor" stroke-width="1.5"/><path d="M8 10h12M8 14h12M8 18h8" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+          </div>
+          <div class="p-label">Court Record</div>
+          <div class="p-sub">Official Govt Data</div>
+        </div>
+        <div class="p-desc">Official Indian government court data — eCourts, public judgment records</div>
+      </div>
+
+      <div class="p-line"><div class="p-travel"></div></div>
+
+      <div class="p-node" tabindex="0" role="button">
+        <div class="p-dot pulse" style="--pd:.4s"></div>
+        <div class="p-box">
+          <div class="p-icon">
+            <svg viewBox="0 0 28 28" fill="none" aria-hidden="true"><circle cx="14" cy="14" r="9" stroke="currentColor" stroke-width="1.5"/><path d="M9 14h10M14 9v10" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+          </div>
+          <div class="p-label">Analysis Engine</div>
+          <div class="p-sub">Institutional AI Research</div>
+        </div>
+        <div class="p-desc">Processed through peer-reviewed legal AI research</div>
+      </div>
+
+      <div class="p-line"><div class="p-travel" style="--td:.3s"></div></div>
+
+      <div class="p-node" tabindex="0" role="button" aria-label="Signal Layer — convergent, auditable signals">
+        <div class="p-dot pulse" style="--pd:.8s"></div>
+        <div class="p-box">
+          <div class="p-icon">
+            <svg viewBox="0 0 28 28" fill="none" aria-hidden="true"><path d="M4 14h4l3-7 4 14 3-7h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="p-label">Signal Layer</div>
+          <div class="p-sub">Convergent · Auditable</div>
+        </div>
+        <div class="p-desc">Convergent signals — formula-versioned and auditable</div>
+      </div>
+
+      <div class="p-line"><div class="p-travel" style="--td:.6s"></div></div>
+
+      <div class="p-node p-node-final" tabindex="0" role="button" aria-label="Intelligence Briefing — your strategic advantage">
+        <div class="p-dot pulse gold-pulse" style="--pd:1.2s"></div>
+        <div class="p-box p-box-gold">
+          <div class="p-icon gold-icon">
+            <svg viewBox="0 0 28 28" fill="none" aria-hidden="true"><path d="M14 4l2.5 7h7.5l-6 4.5 2.5 7L14 18.5 7.5 22.5 10 15.5 4 11h7.5L14 4z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="p-label">Intelligence Briefing</div>
+          <div class="p-sub">Your Strategic Advantage</div>
+        </div>
+        <div class="p-desc">Your intelligence briefing — structured, sourced, on demand</div>
+      </div>
+    </div>
+
+    <!-- Mobile: vertical list -->
+    <div class="pipeline-mobile">
+      <div class="pm-step"><span class="pm-n">01</span>Court Record — Official Govt Data</div>
+      <div class="pm-arrow">↓</div>
+      <div class="pm-step"><span class="pm-n">02</span>Analysis Engine — Institutional AI Research</div>
+      <div class="pm-arrow">↓</div>
+      <div class="pm-step"><span class="pm-n">03</span>Signal Layer — Convergent &amp; Auditable</div>
+      <div class="pm-arrow">↓</div>
+      <div class="pm-step pm-final"><span class="pm-n gold">04</span>Intelligence Briefing</div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════════
+     CONTACT
+     ════════════════════════════════════════════ -->
+<section id="contact" class="section bg-alt">
+  <div class="container narrow">
+    <p class="section-label">Start the conversation</p>
+    <h2 class="section-title">Request an Intelligence Briefing.</h2>
+    <p class="section-body centered">
+      Tell us about your matter or institution. We will respond within one business day.
+    </p>
+
+    <div class="contact-wrap">
+      <!-- FORM — replace the Formspree action URL with your endpoint from formspree.io (free) -->
+      <form class="contact-form" id="contact-form"
+            action="https://formspree.io/f/XXXXXXXX" method="POST">
+        <div class="form-row two-col">
+          <div class="form-group">
+            <label for="c-name">Name</label>
+            <input type="text" id="c-name" name="name" required placeholder="Your name" />
+          </div>
+          <div class="form-group">
+            <label for="c-email">Email</label>
+            <input type="email" id="c-email" name="email" required placeholder="your@firm.com" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="c-org">Organisation</label>
+          <input type="text" id="c-org" name="organisation" placeholder="Firm / Institution" />
+        </div>
+        <div class="form-group">
+          <label for="c-msg">How can we help?</label>
+          <textarea id="c-msg" name="message" rows="4"
+            placeholder="Tell us about your matter, court, or requirement…"></textarea>
+        </div>
+        <button type="submit" class="btn-primary btn-full" data-cta="form_submit" id="submit-btn">
+          Send Request
+        </button>
+        <div class="form-status" id="form-status" role="status" aria-live="polite"></div>
+      </form>
+
+      <div class="contact-aside">
+        <a href="mailto:info@m1nd.in" class="contact-item" data-cta="email_click">
+          <div class="ci-icon">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z" stroke="currentColor" stroke-width="1.5"/><path d="M22 6l-10 7L2 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <div><div class="ci-label">Email us</div><div class="ci-val">info@m1nd.in</div></div>
+        </a>
+        <button onclick="Calendly.initPopupWidget({url:'https://calendly.com/92-jain-n/30min'});return false;"
+                class="contact-item" data-cta="calendly_open">
+          <div class="ci-icon">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M16 2v4M8 2v4M3 10h18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <div><div class="ci-label">Book a call</div><div class="ci-val">Schedule 30 minutes →</div></div>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════════════
+     FOOTER
+     ════════════════════════════════════════════ -->
+<footer class="footer">
+  <div class="container footer-inner">
+    <a href="#top" class="footer-brand">
+      <img src="logo-transparent.png" alt="" aria-hidden="true" />
+      <span><span class="gold">M1ND</span></span>
+    </a>
+    <nav class="footer-nav" aria-label="Footer navigation">
+      <a href="#what-we-do">What We Do</a>
+      <a href="#data">The Data</a>
+      <a href="#who">Who It's For</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <div class="footer-copy">
+      <span>© 2026 M1ND</span>
+      <span class="sep">·</span>
+      <a href="mailto:info@m1nd.in">info@m1nd.in</a>
+      <span class="sep">·</span>
+      <span>We use standard analytics to understand how our site is used.</span>
+    </div>
+  </div>
+</footer>
+
+<!-- Calendly JS -->
+<script src="https://assets.calendly.com/assets/external/widget.js" type="text/javascript" defer></script>
+<script src="app.js" defer></script>
 </body>
 </html>
+
