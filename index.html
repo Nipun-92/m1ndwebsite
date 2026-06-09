@@ -1,637 +1,774 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>M1ND – Behavioural Litigation Intelligence</title>
-  <meta name="description" content="M1ND delivers behavioural litigation intelligence — turning official Indian court data into strategic insights for law firms, institutions, and funders." />
-  <meta name="theme-color" content="#0D1B3E" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Lora:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Legal M1ND — Litigation Intelligence</title>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-2VM264GHP2"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-2VM264GHP2');</script>
+<!--
+  ============================================================================
+  M1ND immersive prototype v3 — "The Signal Field"
+  ----------------------------------------------------------------------------
+  SANDBOX ONLY. Does not affect the live site.
+  v3 fixes (Nipun's feedback):
+    * SEAMLESS SCROLL: the constellation morphs in ONCE, then FREEZES and only
+      rotates on the GPU (no per-frame CPU buffer churn) -> no scroll jank.
+    * FIELD CARRIED THROUGHOUT: visible (dimmed) behind every section for depth.
+    * NO SQUINTING: every heading/tagline gets a scrim + text-shadow; text sits
+      on solid/glass, field glows only in the gaps.
+    * PATTERN-RECOGNITION VIZ: clearly labelled "raw record -> recognised signal".
+    * NEW hero tagline; "Data is everywhere..." kept but on a clear scrim.
+  Vanilla three.js + GSAP ScrollTrigger + Lenis. No build step.
+  ============================================================================
+-->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+<link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0D1B3E; --navy-2:#122651; --ink:#060D1E;
+    --gold:#C89B20; --gold-soft:#E2C566;
+    --ice:#EEF3FA; --body:#C2CEDF; --muted:#8493A8;
+    --line:rgba(232,238,247,.10); --line-gold:rgba(200,155,32,.28);
+    --sans:'Inter',system-ui,sans-serif; --serif:'Lora',Georgia,serif;
+    --max:1140px; --nav-h:68px;
+    --scrim:rgba(6,13,30,.72);
+    --tshadow:0 2px 24px rgba(6,13,30,.95),0 1px 3px rgba(6,13,30,.9);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--ink);color:var(--body);font-family:var(--sans);line-height:1.65;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  .container{max-width:var(--max);margin:0 auto;padding:0 1.6rem}
+  .narrow{max-width:740px}
 
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-2VM264GHP2"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-2VM264GHP2');
-  </script>
+  /* persistent field + continuous veil (dim, so it reads as depth everywhere) */
+  #field{position:fixed;inset:0;width:100vw;height:100vh;z-index:0;display:block}
+  .veil{position:fixed;inset:0;z-index:1;pointer-events:none;
+    background:radial-gradient(140% 100% at 50% -10%, rgba(6,13,30,.10) 0%, rgba(6,13,30,.55) 55%, rgba(6,13,30,.80) 100%)}
+  .wrap{position:relative;z-index:2}
 
-  <!-- Calendly widget CSS -->
-  <link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
+  /* nav */
+  .nav{position:fixed;top:0;left:0;right:0;height:var(--nav-h);z-index:20;display:flex;align-items:center;transition:.3s;border-bottom:1px solid transparent}
+  .nav.scrolled{background:rgba(6,13,30,.85);backdrop-filter:blur(14px);border-color:var(--line)}
+  .nav .inner{max-width:var(--max);margin:0 auto;padding:0 1.6rem;width:100%;display:flex;align-items:center;justify-content:space-between}
+  .brand{font-family:var(--serif);font-weight:700;font-size:1.35rem;letter-spacing:.06em;text-decoration:none;color:var(--ice);text-shadow:var(--tshadow)}
+  .brand .g{color:var(--gold)}
+  .nav-links{display:flex;gap:1.7rem;align-items:center}
+  .nav-links a{font-size:.84rem;letter-spacing:.04em;text-decoration:none;color:var(--body);transition:.2s;text-shadow:var(--tshadow)}
+  .nav-links a:hover{color:var(--ice)}
+  .nav-links a.cta{border:1px solid var(--line-gold);padding:.52rem 1rem;border-radius:8px;color:var(--ice)}
+  .nav-links a.cta:hover{background:var(--gold);color:var(--navy);border-color:var(--gold)}
+  @media(max-width:740px){.nav-links a:not(.cta){display:none}}
 
-  <link rel="stylesheet" href="style.css" />
+  /* hero — text on a soft radial scrim so it always reads */
+  .hero{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:6rem 1.5rem 3rem;position:relative}
+  .hero-scrim{position:absolute;width:min(900px,92vw);height:min(560px,80vh);left:50%;top:50%;transform:translate(-50%,-50%);
+    background:radial-gradient(closest-side, var(--scrim) 0%, rgba(6,13,30,.45) 55%, rgba(6,13,30,0) 100%);z-index:0;pointer-events:none}
+  .hero-in{position:relative;z-index:1}
+  .kicker{font-size:.76rem;letter-spacing:.34em;text-transform:uppercase;color:var(--gold-soft);margin-bottom:1.5rem;text-shadow:var(--tshadow)}
+  .hero h1{font-family:var(--serif);font-weight:700;color:var(--ice);line-height:1.06;font-size:clamp(2.4rem,6.4vw,5.1rem);text-shadow:var(--tshadow);letter-spacing:-.01em}
+  .hero h1 em{display:block;font-style:italic;font-weight:400;color:var(--ice);font-size:clamp(1.1rem,2.4vw,1.85rem);margin-top:1.2rem;line-height:1.4;text-shadow:var(--tshadow)}
+  .hero .sub{max-width:52ch;margin:1.9rem auto 0;font-size:clamp(1.02rem,1.45vw,1.18rem);color:var(--body);text-shadow:var(--tshadow)}
+  .actions{margin-top:2.4rem;display:flex;gap:1rem;flex-wrap:wrap;justify-content:center}
+  .btn{font-size:.93rem;padding:.95rem 1.7rem;border-radius:11px;text-decoration:none;transition:.25s;cursor:pointer;border:0;font-family:inherit}
+  .btn-gold{background:var(--gold);color:var(--navy);font-weight:600}
+  .btn-gold:hover{transform:translateY(-2px);box-shadow:0 16px 44px rgba(200,155,32,.34)}
+  .btn-ghost{color:var(--ice);border:1px solid var(--line-gold);background:rgba(6,13,30,.4)}
+  .btn-ghost:hover{border-color:var(--gold);color:var(--gold-soft)}
+  .btn-full{width:100%}
+
+  /* sections — content panels with enough opacity to kill squint; field shows at edges */
+  .section{padding:6.5rem 0;position:relative}
+  .panel{background:linear-gradient(180deg, rgba(10,20,46,.78), rgba(8,16,36,.82));
+    border:1px solid var(--line);border-radius:22px;padding:3.4rem 2.6rem;backdrop-filter:blur(6px)}
+  @media(max-width:560px){.panel{padding:2.4rem 1.4rem}}
+  .label{font-size:.74rem;letter-spacing:.3em;text-transform:uppercase;color:var(--gold-soft);margin-bottom:1rem}
+  .num-tag{font-family:var(--serif);color:var(--gold);font-size:.9rem;letter-spacing:.1em;margin-bottom:.8rem;opacity:.8}
+  .title{font-family:var(--serif);font-weight:700;color:var(--ice);font-size:clamp(1.7rem,3.6vw,2.85rem);line-height:1.14;letter-spacing:-.01em}
+  .body{color:var(--body);margin-top:1.2rem;max-width:62ch;font-size:1.02rem}
+  .body.center{margin:1.2rem auto 0;text-align:center}
+  .head{text-align:center;margin-bottom:2.8rem}
+  .head .body{margin-left:auto;margin-right:auto}
+
+  .glass{background:linear-gradient(160deg, rgba(27,52,100,.5), rgba(13,27,62,.46));border:1px solid var(--line);border-radius:15px;
+    box-shadow:0 16px 50px rgba(0,0,0,.34), inset 0 1px 0 rgba(232,238,247,.06);transition:transform .35s,border-color .35s,box-shadow .35s}
+  .glass:hover{transform:translateY(-5px);border-color:var(--line-gold);box-shadow:0 28px 76px rgba(0,0,0,.5)}
+
+  .grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:1.3rem}
+  .grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:1.3rem}
+  @media(max-width:880px){.grid-4{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:560px){.grid-4,.grid-2{grid-template-columns:1fr}}
+  .card{padding:1.6rem}
+  .card .ic{width:40px;height:40px;color:var(--gold);margin-bottom:1rem}
+  .card h3{font-family:var(--serif);color:var(--ice);font-size:1.12rem;margin-bottom:.55rem}
+  .card p{font-size:.92rem;color:var(--body)}
+  .tease{margin-top:1rem;border-top:1px solid var(--line);padding-top:.85rem}
+  .tease .ti{font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-soft);margin-bottom:.45rem}
+  .tease ul{list-style:none;font-size:.84rem}
+  .tease li{padding-left:1.05rem;position:relative;margin:.32rem 0}
+  .tease li::before{content:"";position:absolute;left:0;top:.55em;width:5px;height:5px;border-radius:50%;background:var(--gold)}
+
+  /* stats + pattern viz */
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1.3rem;margin-bottom:2.6rem}
+  @media(max-width:880px){.stats{grid-template-columns:repeat(2,1fr)}}
+  .stat{padding:1.5rem;text-align:center}
+  .stat .n{font-family:var(--serif);font-weight:700;color:var(--gold-soft);font-size:clamp(1.8rem,3.4vw,2.7rem);font-variant-numeric:tabular-nums}
+  .stat .l{color:var(--ice);font-size:.92rem;margin-top:.4rem}
+  .stat .s{color:var(--muted);font-size:.75rem;margin-top:.3rem}
+  .viz{padding:1.5rem 1.6rem 1.2rem}
+  .viz .vh{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:.2rem}
+  .viz .vh b{font-family:var(--serif);color:var(--ice);font-size:1.05rem}
+  .viz .vh span{font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+  #pviz{width:100%;height:260px;display:block}
+  .viz .vf{font-size:.82rem;color:var(--body);margin-top:.4rem}
+  .viz .vf b{color:var(--gold-soft);font-weight:600}
+  .grow{display:flex;align-items:center;gap:.5rem;justify-content:center;color:var(--gold-soft);font-size:.86rem;margin-top:2rem;text-shadow:var(--tshadow)}
+  .grow svg{width:16px;height:16px}
+
+  .who{cursor:pointer}.who .hint{margin-top:.9rem;font-size:.78rem;color:var(--gold-soft)}
+
+  .pipe{display:flex;align-items:center;justify-content:center;gap:.4rem;flex-wrap:wrap;margin-top:1rem}
+  .pn{text-align:center;min-width:150px}
+  .pn .dot{width:10px;height:10px;border-radius:50%;background:var(--gold);margin:0 auto .8rem;animation:pulse 2.4s infinite}
+  .pn .pb{padding:1rem;border-radius:12px;border:1px solid var(--line);background:rgba(13,27,62,.5)}
+  .pn.final .pb{border-color:var(--line-gold);background:rgba(200,155,32,.08)}
+  .pn .pl{color:var(--ice);font-size:.95rem}.pn .ps{color:var(--muted);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;margin-top:.2rem}
+  .pline{flex:0 0 38px;height:1px;background:linear-gradient(90deg,var(--gold-soft),transparent);opacity:.5}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(200,155,32,.45)}70%{box-shadow:0 0 0 12px rgba(200,155,32,0)}100%{box-shadow:0 0 0 0 rgba(200,155,32,0)}}
+  @media(max-width:760px){.pline{display:none}.pipe{flex-direction:column}}
+
+  .cgrid{display:grid;grid-template-columns:1.4fr 1fr;gap:2.2rem;margin-top:1rem}
+  @media(max-width:760px){.cgrid{grid-template-columns:1fr}}
+  .fg{margin-bottom:1.05rem}.fg label{display:block;font-size:.82rem;color:var(--ice);margin-bottom:.4rem}
+  .fg input,.fg textarea{width:100%;background:rgba(6,13,30,.6);border:1px solid var(--line);border-radius:9px;padding:.8rem .9rem;color:var(--ice);font-family:inherit;font-size:.92rem}
+  .fg input:focus,.fg textarea:focus{outline:none;border-color:var(--gold)}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:1rem}@media(max-width:560px){.two{grid-template-columns:1fr}}
+  .ci{display:flex;align-items:center;gap:.9rem;padding:1rem;border:1px solid var(--line);border-radius:12px;text-decoration:none;margin-bottom:1rem;transition:.25s;background:rgba(13,27,62,.4);width:100%;cursor:pointer;font-family:inherit;text-align:left}
+  .ci:hover{border-color:var(--line-gold)}.ci svg{width:24px;height:24px;color:var(--gold)}
+  .ci .cl{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em}.ci .cv{color:var(--ice);font-size:.95rem}
+
+  footer{position:relative;z-index:2;padding:2.4rem 0;text-align:center;color:var(--muted);font-size:.8rem;text-shadow:var(--tshadow)}
+  footer .g{color:var(--gold)}
+  .reveal{opacity:0;transform:translateY(26px)}
+
+  .pop{position:fixed;inset:0;z-index:50;display:none;align-items:center;justify-content:center;padding:1.5rem;background:rgba(3,7,18,.74);backdrop-filter:blur(5px)}
+  .pop.open{display:flex}
+  .pop .in{max-width:620px;width:100%;max-height:88vh;overflow:auto;padding:2rem;position:relative;background:linear-gradient(160deg,rgba(18,38,81,.96),rgba(10,20,46,.97));border:1px solid var(--line-gold);border-radius:16px}
+  .pop .x{position:absolute;top:.9rem;right:1rem;background:none;border:0;color:var(--muted);font-size:1.4rem;cursor:pointer}
+  .pop .tag{font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-soft);margin-bottom:.8rem}
+  .pop h3{font-family:var(--serif);color:var(--ice);font-size:1.35rem;margin-bottom:1rem;line-height:1.2}
+  .pop .scn{color:var(--body);margin-bottom:1.2rem}
+  .pf{display:flex;gap:.7rem;margin:.55rem 0;font-size:.9rem;color:var(--body)}.pf .d{flex:0 0 6px;width:6px;height:6px;border-radius:50%;background:var(--gold);margin-top:.5em}
+  .pop .res{margin-top:1.3rem;padding-top:1rem;border-top:1px solid var(--line-gold);font-family:var(--serif);font-style:italic;color:var(--gold-soft)}
+  .note{position:fixed;bottom:10px;right:14px;z-index:30;font-size:.6rem;color:var(--muted);letter-spacing:.1em;background:rgba(6,13,30,.7);padding:.3rem .6rem;border-radius:6px;border:1px solid var(--line-gold)}
+
+  /* ── Brain cinematic viz ── */
+  .brain-stage{position:relative}
+  #pviz{width:100%;height:480px;display:block}
+  @media(max-width:600px){#pviz{height:320px}}
+  .brain-caption{position:absolute;top:10px;right:12px;font-size:.68rem;letter-spacing:.16em;
+    text-transform:uppercase;color:rgba(200,155,32,.65);pointer-events:none;
+    transition:opacity .8s;text-shadow:0 0 16px rgba(200,155,32,.5)}
+
+  /* ── Full-width pipeline ── */
+  .pipe-full{position:relative;overflow:hidden}
+  .pipe-stages{display:grid;grid-template-columns:repeat(4,1fr)}
+  .pipe-stage{padding:2.6rem 2rem;text-align:center;border-right:1px solid var(--line);position:relative}
+  .pipe-stage:last-child{border-right:none}
+  .pipe-stage.final{background:rgba(200,155,32,.04)}
+  .pipe-dot{width:12px;height:12px;border-radius:50%;background:var(--gold);
+    animation:pulse 2.4s infinite;margin:0 auto 1.2rem}
+  .pipe-stage.final .pipe-dot{animation-duration:1.6s}
+  .pipe-label{font-family:var(--serif);color:var(--ice);font-size:1.07rem;margin-bottom:.32rem}
+  .pipe-sub{color:var(--muted);font-size:.71rem;letter-spacing:.09em;
+    text-transform:uppercase;margin-bottom:.8rem}
+  .pipe-desc{font-size:.87rem;color:var(--body);max-width:24ch;margin:0 auto;line-height:1.57}
+  .pipe-signal-line{position:absolute;top:2.95rem;height:2px;width:72px;pointer-events:none;
+    background:linear-gradient(90deg,rgba(200,155,32,0),var(--gold-soft),rgba(200,155,32,0));
+    box-shadow:0 0 14px rgba(200,155,32,.7),0 0 38px rgba(200,155,32,.28);
+    animation:pipe-travel 3.4s linear infinite;z-index:2;border-radius:2px}
+  @keyframes pipe-travel{
+    0%{left:-72px;opacity:0}7%{opacity:1}88%{opacity:1}100%{left:100%;opacity:0}}
+  @media(max-width:760px){
+    .pipe-stages{grid-template-columns:1fr 1fr}
+    .pipe-stage{border-right:none;border-bottom:1px solid var(--line)}
+    .pipe-stage:nth-child(odd){border-right:1px solid var(--line)}
+    .pipe-signal-line{display:none}}
+  @media(max-width:480px){
+    .pipe-stages{grid-template-columns:1fr}
+    .pipe-stage:nth-child(odd){border-right:none}}
+
+  /* ── Hero logo mark ── */
+  .hero-logo{font-family:var(--serif);font-weight:700;font-size:clamp(2.8rem,7vw,5.6rem);
+    letter-spacing:.18em;color:var(--ice);text-shadow:0 0 60px rgba(200,155,32,.35),var(--tshadow);
+    margin-bottom:1.4rem;line-height:1}
+  .hero-logo .g{color:var(--gold);text-shadow:0 0 40px rgba(200,155,32,.6)}
+
+  /* ── Hero extended copy ── */
+  .hero-deck{font-family:var(--serif);font-style:italic;color:var(--ice);
+    font-size:clamp(1.25rem,2.6vw,2rem);line-height:1.3;
+    text-shadow:var(--tshadow);margin-top:1.2rem}
+  .hero-hook{font-size:clamp(.86rem,1.25vw,1rem);color:var(--gold-soft);
+    letter-spacing:.13em;text-transform:uppercase;font-weight:600;
+    margin-top:.85rem;text-shadow:var(--tshadow)}
+
+  /* ── Full-viewport AI particle field ── */
+  #particle-field{position:fixed;inset:0;z-index:2;pointer-events:none}
+
+  /* ── Hero word-reveal animation ── */
+  .w-em{display:inline-block;opacity:0;animation:w-in .78s cubic-bezier(.23,1,.32,1) both}
+  .w-em.gf{animation:w-gf .92s cubic-bezier(.23,1,.32,1) both}
+  @keyframes w-in{from{opacity:0;filter:blur(14px);transform:translateY(8px)}to{opacity:1;filter:blur(0);transform:translateY(0)}}
+  @keyframes w-gf{
+    0%{opacity:0;filter:blur(14px);transform:translateY(8px)}
+    45%{color:var(--gold-soft);text-shadow:0 0 22px rgba(200,155,32,.55);filter:blur(0);transform:translateY(0);opacity:1}
+    100%{opacity:1;filter:blur(0);transform:translateY(0);color:inherit}}
+
+  /* ── Hero logo image ── */
+  .hero-logo-img{display:block;max-height:120px;max-width:340px;margin:0 auto 1.4rem;
+    filter:brightness(1.2) drop-shadow(0 0 28px rgba(200,155,32,.45));object-fit:contain}
+</style>
 </head>
 <body>
+  <canvas id="field"></canvas>
+  <canvas id="particle-field"></canvas>
+  <div class="veil"></div>
 
-<!-- ════════════════════════════════════════════
-     NAVIGATION — persistent, always visible
-     ════════════════════════════════════════════ -->
-<header class="nav-bar" id="navbar">
-  <div class="nav-inner">
-    <a href="#top" class="nav-logo" aria-label="M1ND — home">
-      <img src="logo-transparent.png" alt="M1ND" class="nav-logo-img" />
-      <span class="nav-wordmark"><span class="gold">M1ND</span></span>
-    </a>
-    <nav class="nav-links" id="navLinks" role="navigation">
-      <a href="#what-we-do" class="nav-link" data-cta="nav_what">What We Do</a>
-      <a href="#data"       class="nav-link" data-cta="nav_data">The Data</a>
-      <a href="#who"        class="nav-link" data-cta="nav_who">Who It's For</a>
-      <a href="#contact"    class="nav-link nav-cta" data-cta="nav_contact">Get in Touch</a>
-    </nav>
-    <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
-      <span></span><span></span><span></span>
-    </button>
-  </div>
-</header>
-
-
-<!-- ════════════════════════════════════════════
-     HERO
-     ════════════════════════════════════════════ -->
-<section id="top" class="hero">
-  <div class="hero-bg" aria-hidden="true"></div>
-  <div class="container hero-inner">
-    <p class="hero-kicker reveal">Behavioural Litigation Intelligence</p>
-    <h1 class="hero-title reveal" style="--d:.1s">
-      Search ≠ Strategy.<br><em>Data is everywhere — intelligence is not.</em>
-    </h1>
-    <p class="hero-sub reveal" style="--d:.2s">
-      M1ND transforms the public judgment record into structured, auditable intelligence — giving legal professionals the strategic clarity to act before the moment, not after it.
-    </p>
-    <div class="hero-actions reveal" style="--d:.3s">
-      <a href="#contact" class="btn-primary" data-cta="hero_request">Request an Intelligence Briefing</a>
-      <a href="#what-we-do" class="btn-ghost" data-cta="hero_learn">What we surface →</a>
+  <div class="nav" id="nav"><div class="inner">
+    <a class="brand" href="#top"><span class="g">M1ND</span></a>
+    <div class="nav-links">
+      <a href="#what-we-do">What We Do</a><a href="#data">The Data</a><a href="#who">Who It's For</a>
+      <a href="#contact" class="cta">Get in Touch</a>
     </div>
-  </div>
-</section>
+  </div></div>
 
-
-<!-- ════════════════════════════════════════════
-     THE PROBLEM
-     ════════════════════════════════════════════ -->
-<section id="problem" class="section bg-alt">
-  <div class="container narrow">
-    <p class="section-label">The problem we solve</p>
-    <h2 class="section-title">Strategy built on impressions.<br>Not on evidence.</h2>
-    <p class="section-body">
-      A litigation counsel profiles a judge from three or four personal appearances. A junior writes a narrative summary. That is the strategy — built on instinct, not the record. The opponent knows the same things you don't.
-    </p>
-    <p class="section-body">
-      Decades of decisions, patterns, and precedent sit inside published Indian court records — structured, searchable, and waiting. M1ND makes that intelligence computable, auditable, and ready before the moment you need it.
-    </p>
-  </div>
-</section>
-
-
-<!-- ════════════════════════════════════════════
-     WHAT WE DO — four intelligence streams
-     ════════════════════════════════════════════ -->
-<section id="what-we-do" class="section">
-  <div class="container">
-    <p class="section-label">Four intelligence streams</p>
-    <h2 class="section-title">One briefing.<br>Every decision-critical signal.</h2>
-    <p class="section-body centered">From courts and tribunals to arbitration and M&amp;A — wherever a high-stakes decision is made by an identifiable decision-maker.</p>
-
-    <div class="streams-grid">
-
-      <div class="stream-card reveal">
-        <div class="stream-icon">
-          <svg viewBox="0 0 40 40" fill="none" aria-hidden="true">
-            <path d="M20 4v32M8 36h24" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-            <path d="M20 8L8 18M20 8l12 10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-            <circle cx="8" cy="22" r="4" stroke="currentColor" stroke-width="1.5"/>
-            <circle cx="32" cy="22" r="4" stroke="currentColor" stroke-width="1.5"/>
-          </svg>
-        </div>
-        <h3>Decision-Forum Intelligence</h3>
-        <p>How decision-makers at every level have ruled, reasoned, and responded — across courts, arbitration panels, tribunals, and regulatory forums.</p>
-        <div class="stream-tease">
-          <p class="tease-intro">What you might discover</p>
-          <ul>
-            <li>How a forum has decided across thousands of comparable matters</li>
-            <li>The arguments and precedents that carry weight</li>
-            <li>Patterns across panel compositions and multi-member forums</li>
-          </ul>
+  <div class="wrap">
+    <!-- HERO -->
+    <section class="hero" id="top">
+      <div class="hero-scrim"></div>
+      <div class="hero-in">
+        <img src="Legal M1ND Logo.png" alt="Legal M1ND" class="hero-logo-img" data-h>
+        <div class="hero-logo" data-h>M<span class="g">1</span>ND</div>
+        <div class="kicker" data-h>Litigation Intelligence</div>
+        <h1 data-h>Search <span style="color:var(--gold)">&ne;</span> Strategy.</h1>
+        <p class="hero-deck" data-h>Data is everywhere. Intelligence is not.</p>
+        <p class="hero-hook" data-h>Stop reacting.&ensp;Start anticipating.</p>
+        <p class="sub" data-wordreveal>Legal M1ND decodes the noise. By quantifying critical behavioural, strategic, and contextual signals, we transform raw legal data into clear, actionable intelligence. For the first time, hidden patterns become visible, measurable, and actionable — empowering legal professionals to lead with proactive, bulletproof strategy.</p>
+        <div class="actions" data-h>
+          <a class="btn btn-gold" href="#contact">Request an Intelligence Briefing</a>
+          <a class="btn btn-ghost" href="#what-we-do">What we surface &rarr;</a>
         </div>
       </div>
+    </section>
 
-      <div class="stream-card reveal">
-        <div class="stream-icon">
-          <svg viewBox="0 0 40 40" fill="none" aria-hidden="true">
-            <rect x="6" y="14" width="28" height="20" rx="3" stroke="currentColor" stroke-width="1.8"/>
-            <path d="M14 14v-4a6 6 0 0 1 12 0v4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-            <path d="M6 24h28" stroke="currentColor" stroke-width="1.5" stroke-dasharray="2 2"/>
-          </svg>
+    <!-- PROBLEM -->
+    <section class="section" id="problem"><div class="container narrow"><div class="panel">
+      <p class="label reveal">The problem we solve</p>
+      <h2 class="title reveal">Strategy built on impressions.<br>Not on evidence.</h2>
+      <p class="body reveal">A litigation counsel profiles a judge from three or four personal appearances. A junior writes a narrative summary. That is the strategy — built on instinct, not the record. The opponent knows the same things you don't.</p>
+      <p class="body reveal">Decades of decisions, patterns, and precedent sit inside published Indian court records — structured, searchable, and waiting. M1ND makes that intelligence computable, auditable, and ready before the moment you need it.</p>
+    </div></div></section>
+
+    <!-- WHAT WE DO -->
+    <section class="section" id="what-we-do"><div class="container">
+      <div class="head"><p class="label reveal">Four intelligence streams</p><h2 class="title reveal">One briefing.<br>Every decision-critical signal.</h2>
+      <p class="body center reveal">From courts and tribunals to arbitration and M&amp;A — wherever a high-stakes decision is made by an identifiable decision-maker.</p></div>
+      <div class="grid-2">
+        <div class="glass card reveal"><svg class="ic" viewBox="0 0 40 40" fill="none"><path d="M20 4v32M8 36h24" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M20 8L8 18M20 8l12 10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="8" cy="22" r="4" stroke="currentColor" stroke-width="1.5"/><circle cx="32" cy="22" r="4" stroke="currentColor" stroke-width="1.5"/></svg>
+          <h3>Decision-Forum Intelligence</h3><p>How decision-makers at every level have ruled, reasoned, and responded — across courts, arbitration panels, tribunals, and regulatory forums.</p>
+          <div class="tease"><p class="ti">What you might discover</p><ul><li>How a forum has decided across thousands of comparable matters</li><li>The arguments and precedents that carry weight</li><li>Patterns across panel compositions and multi-member forums</li></ul></div></div>
+        <div class="glass card reveal"><svg class="ic" viewBox="0 0 40 40" fill="none"><rect x="6" y="14" width="28" height="20" rx="3" stroke="currentColor" stroke-width="1.8"/><path d="M14 14v-4a6 6 0 0 1 12 0v4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M6 24h28" stroke="currentColor" stroke-width="1.5" stroke-dasharray="2 2"/></svg>
+          <h3>Counterpart Intelligence</h3><p>The patterns behind how opposing counsel argues, how a negotiating counterpart behaves, and where each side has been strong or vulnerable.</p>
+          <div class="tease"><p class="ti">What you might discover</p><ul><li>How the other side has argued and negotiated comparable matters</li><li>Approaches that have worked against similar positions</li><li>Behavioural signals under pressure</li></ul></div></div>
+        <div class="glass card reveal"><svg class="ic" viewBox="0 0 40 40" fill="none"><path d="M10 6h20a2 2 0 0 1 2 2v24a2 2 0 0 1-2 2H10a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z" stroke="currentColor" stroke-width="1.8"/><path d="M14 14h12M14 20h12M14 26h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          <h3>Law Intelligence</h3><p>Not what a statute says — but how courts and tribunals have actually applied it across thousands of decisions, and what that means for your matter.</p>
+          <div class="tease"><p class="ti">What you might discover</p><ul><li>How this forum interprets a specific statute or clause in practice</li><li>Arguments that have moved decision-makers in similar matters</li><li>How the same law is applied differently across jurisdictions</li></ul></div></div>
+        <div class="glass card reveal"><svg class="ic" viewBox="0 0 40 40" fill="none"><path d="M6 32l8-10 6 5 6-8 8 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="6" cy="32" r="2" fill="currentColor"/><circle cx="34" cy="25" r="2" fill="currentColor"/></svg>
+          <h3>Strategy &amp; Scenario Intelligence</h3><p>Outcome modelling, settlement signals, and scenario planning — for litigation, arbitration, commercial negotiations, and M&amp;A due diligence.</p>
+          <div class="tease"><p class="ti">What you might discover</p><ul><li>The likely range of outcomes and their probabilities</li><li>When and how to position for settlement or escalation</li><li>How earlier comparable decisions shape your exposure</li></ul></div></div>
+      </div>
+    </div></section>
+
+    <!-- DATA + pattern-recognition viz -->
+    <section class="section" id="data"><div class="container">
+      <div class="head"><p class="label reveal">The scale behind the intelligence</p><h2 class="title reveal">Built from the official record.<br>Growing with every court.</h2>
+      <p class="body center reveal">A snapshot of what is live and indexed today — this corpus expands with every new ingestion run.</p></div>
+      <div class="stats">
+        <div class="glass stat reveal"><div class="n" data-target="157508">0</div><div class="l">Cases Ingested</div><div class="s">Patna High Court · 2021–2025</div></div>
+        <div class="glass stat reveal"><div class="n" data-target="4.1" data-dec="1" data-suffix="M">0</div><div class="l">Named Entity Extractions</div><div class="s">Judges · lawyers · statutes · organisations</div></div>
+        <div class="glass stat reveal"><div class="n" data-target="47907">0</div><div class="l">Statute Interpretations</div><div class="s">How courts actually apply each law</div></div>
+        <div class="glass stat reveal"><div class="n" data-target="200" data-suffix="+">0</div><div class="l">Judicial Profiles</div><div class="s">Signals computed &amp; indexed</div></div>
+      </div>
+      <div class="glass reveal" style="padding:.5rem .8rem 1.4rem" id="brain-section">
+        <div class="brain-stage">
+          <canvas id="pviz"></canvas>
         </div>
-        <h3>Counterpart Intelligence</h3>
-        <p>The patterns behind how opposing counsel argues, how a negotiating counterpart behaves, and where each side has been strong or vulnerable.</p>
-        <div class="stream-tease">
-          <p class="tease-intro">What you might discover</p>
-          <ul>
-            <li>How the other side has argued and negotiated comparable matters</li>
-            <li>Approaches that have worked against similar positions</li>
-            <li>Behavioural signals under pressure</li>
-          </ul>
+        <p class="vf" style="text-align:center;max-width:72ch;margin:1.1rem auto 0">Data evolves, and so do we. By continuously computing every signal and uncovering deep contextual relationships, we turn raw information into proactive insight. Legal M1ND ensures you possess the knowledge and understanding required to master the room long before you even step inside.</p>
+      </div>
+      <p class="grow reveal"><svg viewBox="0 0 18 18" fill="none"><path d="M9 3v12M3 9l6-6 6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Expanding across courts, jurisdictions, and data sources. More coming soon.</p>
+    </div></section>
+
+    <!-- WHO -->
+    <section class="section" id="who"><div class="container">
+      <div class="head"><p class="label reveal">Built for those with the most to lose</p><h2 class="title reveal">Four types of professionals.<br>One intelligence platform.</h2>
+      <p class="body center reveal">Click any card to see exactly what M1ND surfaces for each audience.</p></div>
+      <div class="grid-4">
+        <div class="glass card who reveal" data-pop="p-law"><svg class="ic" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="10" r="6" stroke="currentColor" stroke-width="1.6"/><path d="M4 28c0-6.627 5.373-12 12-12s12 5.373 12 12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg><h3>Lawyers &amp; Litigation Counsel</h3><p>The individual practitioner who walks into court — and needs to walk in better prepared than anyone in the room.</p><div class="hint">Tap to see the use case &rarr;</div></div>
+        <div class="glass card who reveal" data-pop="p-firm"><svg class="ic" viewBox="0 0 32 32" fill="none"><path d="M4 28V12L16 4l12 8v16" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><rect x="10" y="18" width="12" height="10" stroke="currentColor" stroke-width="1.4"/></svg><h3>Law Firms</h3><p>Practice development, partner-to-matter allocation, and client outcomes — powered by data across the full case record, not senior intuition.</p><div class="hint">Tap to see the use case &rarr;</div></div>
+        <div class="glass card who reveal" data-pop="p-corp"><svg class="ic" viewBox="0 0 32 32" fill="none"><rect x="3" y="9" width="26" height="18" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M10 9V7a6 6 0 0 1 12 0v2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg><h3>Corporate Legal Departments</h3><p>In-house counsel who need to brief complex disputes and regulatory matters before handing them to external counsel — without wasting senior-partner time on groundwork.</p><div class="hint">Tap to see the use case &rarr;</div></div>
+        <div class="glass card who reveal" data-pop="p-govt"><svg class="ic" viewBox="0 0 32 32" fill="none"><path d="M2 28h28M6 28V14M26 28V14M2 14l14-10 14 10" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><rect x="12" y="20" width="8" height="8" stroke="currentColor" stroke-width="1.4"/></svg><h3>Ministry of Justice &amp; Judiciary</h3><p>Court administration, cause-list analytics, and systemic efficiency — aligned with eCourts Phase III and the Department of Justice's access-to-justice mandate.</p><div class="hint">Tap to see the use case &rarr;</div></div>
+      </div>
+    </div></section>
+
+    <!-- BEYOND -->
+    <section class="section" id="beyond"><div class="container">
+      <div class="head"><p class="label reveal">Wherever a decision changes everything</p><h2 class="title reveal">Beyond the courtroom.</h2>
+      <p class="body center reveal">The same intelligence infrastructure applies to every forum where a high-stakes decision is made by an identifiable decision-maker.</p></div>
+      <div class="grid-4">
+        <div class="glass card reveal"><h3>Commercial Arbitration</h3><p>Arbitrators have published awards, procedural preferences, and timing patterns. Know your arbitrator before you file — SIAC, ICC, DIAC, and domestic panels.</p></div>
+        <div class="glass card reveal"><h3>M&amp;A &amp; Corporate Transactions</h3><p>Regulatory approval posture — CCI, SEBI, RBI. Target company legal exposure from the full enforcement history. Counterpart intelligence in high-stakes negotiations.</p></div>
+        <div class="glass card reveal"><h3>Settlement &amp; Negotiation</h3><p>Settlement curve modelling, leverage signals, and timing intelligence — when to push, when to settle, what the counterpart's history says about where they fold.</p></div>
+        <div class="glass card reveal"><h3>Cross-Jurisdictional Intelligence</h3><p>How the same statute is applied differently across Patna, Gujarat, Bombay, Delhi HCs, and the Supreme Court. Choose your forum with intelligence, not assumption.</p></div>
+      </div>
+    </div></section>
+
+    <!-- TRUST -->
+    <section class="section" id="trust"><div class="container">
+      <div class="head"><p class="label reveal">Built on rigour</p><h2 class="title reveal">The glass box,<br>not the black box.</h2></div>
+      <div class="grid-4">
+        <div class="glass card reveal"><h3>Official government sources</h3><p>Sourced exclusively from public Indian court records and government-maintained legal databases. Not scraped. Not estimated.</p></div>
+        <div class="glass card reveal"><h3>Peer-reviewed methodology</h3><p>Built on over three decades of published research in computational legal reasoning. Methods that courts, academics, and institutions can audit.</p></div>
+        <div class="glass card reveal"><h3>Indian infrastructure · Data sovereignty</h3><p>Processed on Indian infrastructure. Public records only. Privacy by design.</p></div>
+        <div class="glass card reveal"><h3>Auditable, not opaque</h3><p>Every signal traces to its source. Methodology is versioned and documented. The intelligence we deliver can be questioned, examined, and defended.</p></div>
+      </div>
+    </div></section>
+
+    <!-- PIPELINE -->
+    <section class="section" id="pipeline">
+      <div class="container">
+        <div class="head" style="margin-bottom:2.6rem">
+          <p class="label reveal">The platform</p>
+          <h2 class="title reveal">From public record<br>to strategic intelligence.</h2>
+          <p class="body center reveal">A deeply engineered pipeline — official government data &rarr; structured analysis &rarr; auditable briefing.</p>
         </div>
-      </div>
-
-      <div class="stream-card reveal">
-        <div class="stream-icon">
-          <svg viewBox="0 0 40 40" fill="none" aria-hidden="true">
-            <path d="M10 6h20a2 2 0 0 1 2 2v24a2 2 0 0 1-2 2H10a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z" stroke="currentColor" stroke-width="1.8"/>
-            <path d="M14 14h12M14 20h12M14 26h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-          </svg>
-        </div>
-        <h3>Law Intelligence</h3>
-        <p>Not what a statute says — but how courts and tribunals have actually applied it across thousands of decisions, and what that means for your matter.</p>
-        <div class="stream-tease">
-          <p class="tease-intro">What you might discover</p>
-          <ul>
-            <li>How this forum interprets a specific statute or clause in practice</li>
-            <li>Arguments that have moved decision-makers in similar matters</li>
-            <li>How the same law is applied differently across jurisdictions</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="stream-card reveal">
-        <div class="stream-icon">
-          <svg viewBox="0 0 40 40" fill="none" aria-hidden="true">
-            <path d="M6 32l8-10 6 5 6-8 8 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-            <circle cx="6" cy="32" r="2" fill="currentColor"/>
-            <circle cx="34" cy="25" r="2" fill="currentColor"/>
-          </svg>
-        </div>
-        <h3>Strategy &amp; Scenario Intelligence</h3>
-        <p>Outcome modelling, settlement signals, and scenario planning — for litigation, arbitration, commercial negotiations, and M&amp;A due diligence.</p>
-        <div class="stream-tease">
-          <p class="tease-intro">What you might discover</p>
-          <ul>
-            <li>The likely range of outcomes and their probabilities</li>
-            <li>When and how to position for settlement or escalation</li>
-            <li>How earlier comparable decisions shape your exposure</li>
-          </ul>
-        </div>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-
-<!-- ════════════════════════════════════════════
-     DATA SCALE
-     ════════════════════════════════════════════ -->
-<section id="data" class="section bg-alt">
-  <div class="container">
-    <p class="section-label">The scale behind the intelligence</p>
-    <h2 class="section-title">Built from the official record.<br>Growing with every court.</h2>
-    <p class="section-body centered">A snapshot of what is live and indexed today — this corpus expands with every new ingestion run.</p>
-
-    <div class="stats-grid">
-      <div class="stat-card reveal">
-        <div class="stat-num" data-target="157508">0</div>
-        <div class="stat-label">Cases Ingested</div>
-        <div class="stat-sub">Patna High Court · 2021–2025</div>
-      </div>
-      <div class="stat-card reveal">
-        <div class="stat-num" data-target="4.1" data-decimals="1" data-suffix="M">0</div>
-        <div class="stat-label">Named Entity Extractions</div>
-        <div class="stat-sub">Judges · lawyers · statutes · organisations</div>
-      </div>
-      <div class="stat-card reveal">
-        <div class="stat-num" data-target="47907">0</div>
-        <div class="stat-label">Statute Interpretations</div>
-        <div class="stat-sub">How courts actually apply each law</div>
-      </div>
-      <div class="stat-card reveal">
-        <div class="stat-num" data-target="200" data-suffix="+">0</div>
-        <div class="stat-label">Judicial Profiles</div>
-        <div class="stat-sub">Behavioural signals computed</div>
-      </div>
-    </div>
-
-    <p class="data-grow reveal">
-      <svg viewBox="0 0 18 18" fill="none" aria-hidden="true" width="18" height="18">
-        <path d="M9 3v12M3 9l6-6 6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-      Expanding across courts, jurisdictions, and data sources. More coming soon.
-    </p>
-
-  </div>
-</section>
-
-
-<!-- ════════════════════════════════════════════
-     WHO IT'S FOR — clickable cards with use-case popups
-     ════════════════════════════════════════════ -->
-<section id="who" class="section">
-  <div class="container">
-    <p class="section-label">Built for those with the most to lose</p>
-    <h2 class="section-title">Four types of professionals.<br>One intelligence platform.</h2>
-    <p class="section-body centered">Click any card to see exactly what M1ND surfaces for each audience.</p>
-
-    <div class="who-grid" id="who-grid">
-
-      <!-- Card 1: Lawyers -->
-      <div class="who-card reveal who-clickable" data-popup="popup-lawyers" role="button" tabindex="0" aria-expanded="false">
-        <div class="who-icon">
-          <svg viewBox="0 0 32 32" fill="none" aria-hidden="true">
-            <circle cx="16" cy="10" r="6" stroke="currentColor" stroke-width="1.6"/>
-            <path d="M4 28c0-6.627 5.373-12 12-12s12 5.373 12 12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
-          </svg>
-        </div>
-        <h3>Lawyers &amp; Litigation Counsel</h3>
-        <p>The individual practitioner who walks into court — and needs to walk in better prepared than anyone in the room.</p>
-        <div class="who-hint">Tap to see the use case →</div>
-      </div>
-
-      <!-- Card 2: Law Firms -->
-      <div class="who-card reveal who-clickable" data-popup="popup-firms" role="button" tabindex="0" aria-expanded="false">
-        <div class="who-icon">
-          <svg viewBox="0 0 32 32" fill="none" aria-hidden="true">
-            <path d="M4 28V12L16 4l12 8v16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-            <rect x="10" y="18" width="12" height="10" stroke="currentColor" stroke-width="1.4"/>
-            <path d="M13 28v-5h6v5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
-          </svg>
-        </div>
-        <h3>Law Firms</h3>
-        <p>Practice development, partner-to-matter allocation, and client outcomes — powered by data across the full case record, not senior intuition.</p>
-        <div class="who-hint">Tap to see the use case →</div>
-      </div>
-
-      <!-- Card 3: Corporate Legal -->
-      <div class="who-card reveal who-clickable" data-popup="popup-corporate" role="button" tabindex="0" aria-expanded="false">
-        <div class="who-icon">
-          <svg viewBox="0 0 32 32" fill="none" aria-hidden="true">
-            <rect x="3" y="9" width="26" height="18" rx="2" stroke="currentColor" stroke-width="1.6"/>
-            <path d="M10 9V7a6 6 0 0 1 12 0v2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
-            <path d="M3 17h26" stroke="currentColor" stroke-width="1.3" stroke-dasharray="2 2"/>
-          </svg>
-        </div>
-        <h3>Corporate Legal Departments</h3>
-        <p>In-house counsel who need to brief complex disputes and regulatory matters before handing them to external counsel — without wasting senior-partner time on groundwork.</p>
-        <div class="who-hint">Tap to see the use case →</div>
-      </div>
-
-      <!-- Card 4: Government / Ministry -->
-      <div class="who-card reveal who-clickable" data-popup="popup-govt" role="button" tabindex="0" aria-expanded="false">
-        <div class="who-icon">
-          <svg viewBox="0 0 32 32" fill="none" aria-hidden="true">
-            <path d="M2 28h28M6 28V14M26 28V14M2 14l14-10 14 10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-            <rect x="12" y="20" width="8" height="8" stroke="currentColor" stroke-width="1.4"/>
-          </svg>
-        </div>
-        <h3>Ministry of Justice &amp; Judiciary</h3>
-        <p>Court administration, cause-list analytics, and systemic efficiency — aligned with eCourts Phase III and the Department of Justice's access-to-justice mandate.</p>
-        <div class="who-hint">Tap to see the use case →</div>
-      </div>
-
-    </div>
-
-    <!-- Use-case popups (hidden by default, open on card click) -->
-    <div class="who-popup-wrap" id="popup-lawyers" role="dialog" aria-modal="true" aria-label="Lawyers use case" hidden>
-      <div class="who-popup">
-        <button class="popup-close" aria-label="Close">✕</button>
-        <div class="popup-tag">Lawyers &amp; Litigation Counsel</div>
-        <h3 class="popup-title">12 hours before your hearing — here's what is ready.</h3>
-        <p class="popup-scenario">A litigation counsel opens a judge's profile before a bail hearing. M1ND surfaces the full decision-making pattern from thousands of cases: bail grant rate by offence cluster, language style, bench dynamics, and a one-sentence strategic implication.</p>
-        <div class="popup-features">
-          <div class="pf"><span class="pf-dot gold"></span>Bail grant rates, dismissal patterns, and bench dynamics across the full judgment record</div>
-          <div class="pf"><span class="pf-dot gold"></span>Your opponent's procedural tactics and settlement posture from the prior 24 months</div>
-          <div class="pf"><span class="pf-dot gold"></span>How this court has applied the relevant statute — the "spirit of the law" from 47,907 interpretations</div>
-          <div class="pf"><span class="pf-dot gold"></span>Counter-argument structure derived from your opponent's historical patterns</div>
-          <div class="pf"><span class="pf-dot gold"></span>One strategic implication, stated explicitly — what to lead with, what to avoid</div>
-        </div>
-        <div class="popup-result">"The hearing is the same. The preparation is not."</div>
-      </div>
-    </div>
-
-    <div class="who-popup-wrap" id="popup-firms" role="dialog" aria-modal="true" aria-label="Law Firms use case" hidden>
-      <div class="who-popup">
-        <button class="popup-close" aria-label="Close">✕</button>
-        <div class="popup-tag">Law Firms</div>
-        <h3 class="popup-title">Practice development driven by data, not precedent and personality.</h3>
-        <p class="popup-scenario">A managing partner building an IPR practice reviews bench-affinity analytics across multiple High Courts — disposition velocity, partner-to-bench historical alignment, case-pipeline complexity ratios. Partner-to-matter decisions made on intelligence, not seniority.</p>
-        <div class="popup-features">
-          <div class="pf"><span class="pf-dot gold"></span>Bench-affinity analytics: which partners perform best before which benches</div>
-          <div class="pf"><span class="pf-dot gold"></span>Practice niche development: where the firm's historical strengths are, by court and matter type</div>
-          <div class="pf"><span class="pf-dot gold"></span>Case-pipeline prioritisation by complexity-to-outcome ratio</div>
-          <div class="pf"><span class="pf-dot gold"></span>Cross-jurisdictional insights for firms appearing before multiple HCs</div>
-          <div class="pf"><span class="pf-dot gold"></span>Client retention through consistent, intelligence-backed outcomes</div>
-        </div>
-        <div class="popup-result">"Intelligence-enhanced practice, not just faster search."</div>
-      </div>
-    </div>
-
-    <div class="who-popup-wrap" id="popup-corporate" role="dialog" aria-modal="true" aria-label="Corporate Legal use case" hidden>
-      <div class="who-popup">
-        <button class="popup-close" aria-label="Close">✕</button>
-        <div class="popup-tag">Corporate Legal Departments</div>
-        <h3 class="popup-title">Pre-brief before you escalate. Hand over the strategic questions, not the groundwork.</h3>
-        <p class="popup-scenario">In-house counsel queries the platform before escalating a regulatory matter to external counsel. The platform returns: the regulator's enforcement posture from historical filings, procedural response patterns with success-rate annotations, and the court's interpretive history for the invoked statutory provision.</p>
-        <div class="popup-features">
-          <div class="pf"><span class="pf-dot gold"></span>Regulator enforcement posture and precedent landscape before any formal engagement</div>
-          <div class="pf"><span class="pf-dot gold"></span>Statutory interpretation history for the specific provision at issue</div>
-          <div class="pf"><span class="pf-dot gold"></span>External counsel receives a fully pre-briefed matter — partner time reserved for strategy</div>
-          <div class="pf"><span class="pf-dot gold"></span>M&amp;A target company legal exposure mapped from the full enforcement record</div>
-          <div class="pf"><span class="pf-dot gold"></span>Reduction in outside-counsel cost by 20–30% on substantive groundwork</div>
-        </div>
-        <div class="popup-result">"Reduce what goes to external counsel to the questions only they can answer."</div>
-      </div>
-    </div>
-
-    <div class="who-popup-wrap" id="popup-govt" role="dialog" aria-modal="true" aria-label="Government use case" hidden>
-      <div class="who-popup">
-        <button class="popup-close" aria-label="Close">✕</button>
-        <div class="popup-tag">Ministry of Justice &amp; Judiciary</div>
-        <h3 class="popup-title">The cause list, intelligently briefed. 30 seconds per matter.</h3>
-        <p class="popup-scenario">Before the day's cause list, each matter has a structured brief drawn from the public record: time on docket, how similar matters have been disposed, applicable statutory interpretations, and a disposition-velocity signal. No additional workload — drawn from what already exists.</p>
-        <div class="popup-features">
-          <div class="pf"><span class="pf-dot gold"></span>Cause-list briefings: case history, statutory pattern, comparable disposals — per matter</div>
-          <div class="pf"><span class="pf-dot gold"></span>Backlog triage: identify the 49 lakh cases pending over 10 years by matter type and complexity</div>
-          <div class="pf"><span class="pf-dot gold"></span>Disposition-velocity analytics by bench composition and matter type</div>
-          <div class="pf"><span class="pf-dot gold"></span>Aligned with eCourts Phase III infrastructure — no new data collection required</div>
-          <div class="pf"><span class="pf-dot gold"></span>Supports the Department of Justice's "Access to Justice" mandate — doj.gov.in</div>
-        </div>
-        <div class="popup-result">"30 seconds per matter. Every matter briefed. The record made computable."</div>
-      </div>
-    </div>
-
-  </div>
-</section>
-
-
-<!-- ════════════════════════════════════════════
-     BEYOND THE COURTROOM
-     ════════════════════════════════════════════ -->
-<section id="beyond" class="section bg-alt">
-  <div class="container">
-    <p class="section-label">Wherever a decision changes everything</p>
-    <h2 class="section-title">Beyond the courtroom.</h2>
-    <p class="section-body centered">The same intelligence infrastructure applies to every forum where a high-stakes decision is made by an identifiable decision-maker.</p>
-
-    <div class="beyond-grid">
-      <div class="beyond-card reveal">
-        <div class="beyond-icon">
-          <svg viewBox="0 0 36 36" fill="none"><path d="M18 4v28M6 32h24" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M18 8L6 18M18 8l12 10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="6" cy="22" r="4" stroke="currentColor" stroke-width="1.4"/><circle cx="30" cy="22" r="4" stroke="currentColor" stroke-width="1.4"/></svg>
-        </div>
-        <h3>Commercial Arbitration</h3>
-        <p>Arbitrators have published awards, procedural preferences, and timing patterns. Know your arbitrator before you file — SIAC, ICC, DIAC, and domestic panels.</p>
-      </div>
-      <div class="beyond-card reveal">
-        <div class="beyond-icon">
-          <svg viewBox="0 0 36 36" fill="none"><rect x="4" y="8" width="28" height="20" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M4 14h28" stroke="currentColor" stroke-width="1.4" stroke-dasharray="2 2"/><path d="M12 21h12M12 25h8" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
-        </div>
-        <h3>M&amp;A &amp; Corporate Transactions</h3>
-        <p>Regulatory approval posture — CCI, SEBI, RBI. Target company legal exposure from the full enforcement history. Counterpart intelligence in high-stakes negotiations.</p>
-      </div>
-      <div class="beyond-card reveal">
-        <div class="beyond-icon">
-          <svg viewBox="0 0 36 36" fill="none"><path d="M4 30l8-10 6 5 6-8 8 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M28 10v6M25 13h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-        </div>
-        <h3>Settlement &amp; Negotiation</h3>
-        <p>Settlement curve modelling, leverage signals, and timing intelligence — when to push, when to settle, what the counterpart's history says about where they fold.</p>
-      </div>
-      <div class="beyond-card reveal">
-        <div class="beyond-icon">
-          <svg viewBox="0 0 36 36" fill="none"><circle cx="18" cy="18" r="14" stroke="currentColor" stroke-width="1.6"/><path d="M4 18h28M18 4a22 22 0 0 1 0 28M18 4a22 22 0 0 0 0 28" stroke="currentColor" stroke-width="1.3"/></svg>
-        </div>
-        <h3>Cross-Jurisdictional Intelligence</h3>
-        <p>How the same statute is applied differently across Patna, Gujarat, Bombay, Delhi HCs, and the Supreme Court. Choose your forum with intelligence, not assumption.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-
-<!-- ════════════════════════════════════════════
-     TRUST / CREDIBILITY
-     ════════════════════════════════════════════ -->
-<section id="trust" class="section bg-alt">
-  <div class="container">
-    <p class="section-label">Built on rigour</p>
-    <h2 class="section-title">Every signal can be questioned.<br>Every score has a receipt.</h2>
-
-    <div class="trust-grid">
-      <div class="trust-card reveal">
-        <div class="trust-icon">
-          <svg viewBox="0 0 32 32" fill="none" aria-hidden="true">
-            <path d="M16 3L5 8v8c0 6.627 4.925 12.822 11 14 6.075-1.178 11-7.373 11-14V8L16 3z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
-            <path d="M11 16l3.5 3.5 6-6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </div>
-        <h3>Official government sources</h3>
-        <p>Sourced exclusively from public Indian court records and government-maintained legal databases. Not scraped. Not estimated.</p>
-      </div>
-      <div class="trust-card reveal">
-        <div class="trust-icon">
-          <svg viewBox="0 0 32 32" fill="none" aria-hidden="true">
-            <path d="M16 4L4 10l12 6 12-6-12-6z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
-            <path d="M4 10v8M28 10v8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
-            <path d="M8 13v5c0 2.761 3.582 5 8 5s8-2.239 8-5v-5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
-          </svg>
-        </div>
-        <h3>Peer-reviewed methodology</h3>
-        <p>Built on over three decades of published research in computational legal reasoning. Methods that courts, academics, and institutions can audit.</p>
-      </div>
-      <div class="trust-card reveal">
-        <div class="trust-icon">
-          <svg viewBox="0 0 32 32" fill="none" aria-hidden="true">
-            <rect x="6" y="14" width="20" height="14" rx="3" stroke="currentColor" stroke-width="1.6"/>
-            <path d="M10 14v-4a6 6 0 0 1 12 0v4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
-            <circle cx="16" cy="21" r="2" fill="currentColor"/>
-          </svg>
-        </div>
-        <h3>Indian infrastructure · Data sovereignty</h3>
-        <p>Processed on Indian infrastructure. Public records only. Privacy by design.</p>
-      </div>
-      <div class="trust-card reveal">
-        <div class="trust-icon">
-          <svg viewBox="0 0 32 32" fill="none" aria-hidden="true">
-            <path d="M13 19l-4 4a4 4 0 0 0 5.657 5.657l8-8A4 4 0 0 0 17 15" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
-            <path d="M19 13l4-4a4 4 0 0 0-5.657-5.657l-8 8A4 4 0 0 0 15 17" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
-          </svg>
-        </div>
-        <h3>Auditable, not opaque</h3>
-        <p>Every signal traces to its source. Methodology is versioned and documented. The intelligence we deliver can be questioned, examined, and defended.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-
-<!-- ════════════════════════════════════════════
-     PIPELINE TEASER — animated SVG
-     ════════════════════════════════════════════ -->
-<section id="pipeline" class="section">
-  <div class="container">
-    <p class="section-label">The platform</p>
-    <h2 class="section-title">From public record<br>to strategic intelligence.</h2>
-    <p class="section-body centered">
-      A deeply engineered pipeline — official government data → structured analysis → auditable briefing.
-    </p>
-
-    <!-- Desktop pipeline — tooltips replaced with static descriptions (no overflow-clip issue) -->
-    <div class="pipeline-wrap reveal" id="pipeline-wrap">
-      <div class="p-node" tabindex="0" role="button">
-        <div class="p-dot pulse"></div>
-        <div class="p-box">
-          <div class="p-icon">
-            <svg viewBox="0 0 28 28" fill="none" aria-hidden="true"><rect x="4" y="4" width="20" height="20" rx="3" stroke="currentColor" stroke-width="1.5"/><path d="M8 10h12M8 14h12M8 18h8" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
-          </div>
-          <div class="p-label">Court Record</div>
-          <div class="p-sub">Official Govt Data</div>
-        </div>
-        <div class="p-desc">Official Indian government court data — eCourts, public judgment records</div>
-      </div>
-
-      <div class="p-line"><div class="p-travel"></div></div>
-
-      <div class="p-node" tabindex="0" role="button">
-        <div class="p-dot pulse" style="--pd:.4s"></div>
-        <div class="p-box">
-          <div class="p-icon">
-            <svg viewBox="0 0 28 28" fill="none" aria-hidden="true"><circle cx="14" cy="14" r="9" stroke="currentColor" stroke-width="1.5"/><path d="M9 14h10M14 9v10" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
-          </div>
-          <div class="p-label">Analysis Engine</div>
-          <div class="p-sub">Institutional AI Research</div>
-        </div>
-        <div class="p-desc">Processed through peer-reviewed legal AI research</div>
-      </div>
-
-      <div class="p-line"><div class="p-travel" style="--td:.3s"></div></div>
-
-      <div class="p-node" tabindex="0" role="button" aria-label="Signal Layer — convergent, auditable signals">
-        <div class="p-dot pulse" style="--pd:.8s"></div>
-        <div class="p-box">
-          <div class="p-icon">
-            <svg viewBox="0 0 28 28" fill="none" aria-hidden="true"><path d="M4 14h4l3-7 4 14 3-7h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </div>
-          <div class="p-label">Signal Layer</div>
-          <div class="p-sub">Convergent · Auditable</div>
-        </div>
-        <div class="p-desc">Convergent signals — formula-versioned and auditable</div>
-      </div>
-
-      <div class="p-line"><div class="p-travel" style="--td:.6s"></div></div>
-
-      <div class="p-node p-node-final" tabindex="0" role="button" aria-label="Intelligence Briefing — your strategic advantage">
-        <div class="p-dot pulse gold-pulse" style="--pd:1.2s"></div>
-        <div class="p-box p-box-gold">
-          <div class="p-icon gold-icon">
-            <svg viewBox="0 0 28 28" fill="none" aria-hidden="true"><path d="M14 4l2.5 7h7.5l-6 4.5 2.5 7L14 18.5 7.5 22.5 10 15.5 4 11h7.5L14 4z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
-          </div>
-          <div class="p-label">Intelligence Briefing</div>
-          <div class="p-sub">Your Strategic Advantage</div>
-        </div>
-        <div class="p-desc">Your intelligence briefing — structured, sourced, on demand</div>
-      </div>
-    </div>
-
-    <!-- Mobile: vertical list -->
-    <div class="pipeline-mobile">
-      <div class="pm-step"><span class="pm-n">01</span>Court Record — Official Govt Data</div>
-      <div class="pm-arrow">↓</div>
-      <div class="pm-step"><span class="pm-n">02</span>Analysis Engine — Institutional AI Research</div>
-      <div class="pm-arrow">↓</div>
-      <div class="pm-step"><span class="pm-n">03</span>Signal Layer — Convergent &amp; Auditable</div>
-      <div class="pm-arrow">↓</div>
-      <div class="pm-step pm-final"><span class="pm-n gold">04</span>Intelligence Briefing</div>
-    </div>
-  </div>
-</section>
-
-
-<!-- ════════════════════════════════════════════
-     CONTACT
-     ════════════════════════════════════════════ -->
-<section id="contact" class="section bg-alt">
-  <div class="container narrow">
-    <p class="section-label">Start the conversation</p>
-    <h2 class="section-title">Request an Intelligence Briefing.</h2>
-    <p class="section-body centered">
-      Tell us about your matter or institution. We will respond within one business day.
-    </p>
-
-    <div class="contact-wrap">
-      <!-- FORM — replace the Formspree action URL with your endpoint from formspree.io (free) -->
-      <form class="contact-form" id="contact-form"
-            action="https://formspree.io/f/xeewqwvq" method="POST">
-        <div class="form-row two-col">
-          <div class="form-group">
-            <label for="c-name">Name</label>
-            <input type="text" id="c-name" name="name" required placeholder="Your name" />
-          </div>
-          <div class="form-group">
-            <label for="c-email">Email</label>
-            <input type="email" id="c-email" name="email" required placeholder="your@firm.com" />
+        <div class="pipe-full reveal" style="background:linear-gradient(160deg,rgba(27,52,100,.46),rgba(13,27,62,.42));border:1px solid var(--line);border-radius:15px">
+          <div class="pipe-signal-line"></div>
+          <div class="pipe-stages">
+            <div class="pipe-stage">
+              <div class="pipe-dot"></div>
+              <div class="pipe-label">Court Record</div>
+              <div class="pipe-sub">Official Govt Data</div>
+              <p class="pipe-desc">157,508+ cases from official government sources — structured, versioned, continuously updated.</p>
+            </div>
+            <div class="pipe-stage">
+              <div class="pipe-dot"></div>
+              <div class="pipe-label">Analysis Engine</div>
+              <div class="pipe-sub">Institutional AI Research</div>
+              <p class="pipe-desc">NLP pipelines extract entities, roles, and interpretations — peer-reviewed methodology.</p>
+            </div>
+            <div class="pipe-stage">
+              <div class="pipe-dot"></div>
+              <div class="pipe-label">Signal Layer</div>
+              <div class="pipe-sub">Convergent · Auditable</div>
+              <p class="pipe-desc">Signals converge across the full corpus. Every score versioned, hashed, and traceable to source.</p>
+            </div>
+            <div class="pipe-stage final">
+              <div class="pipe-dot"></div>
+              <div class="pipe-label" style="color:var(--gold-soft)">Intelligence Briefing</div>
+              <div class="pipe-sub">Your Strategic Advantage</div>
+              <p class="pipe-desc">A war-room briefing before you walk in — judge, opponent, law, and scenario in one document.</p>
+            </div>
           </div>
         </div>
-        <div class="form-group">
-          <label for="c-org">Organisation</label>
-          <input type="text" id="c-org" name="organisation" placeholder="Firm / Institution" />
-        </div>
-        <div class="form-group">
-          <label for="c-msg">How can we help?</label>
-          <textarea id="c-msg" name="message" rows="4"
-            placeholder="Tell us about your matter, court, or requirement…"></textarea>
-        </div>
-        <button type="submit" class="btn-primary btn-full" data-cta="form_submit" id="submit-btn">
-          Send Request
-        </button>
-        <div class="form-status" id="form-status" role="status" aria-live="polite"></div>
-      </form>
-
-      <div class="contact-aside">
-        <a href="mailto:info@m1nd.in" class="contact-item" data-cta="email_click">
-          <div class="ci-icon">
-            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z" stroke="currentColor" stroke-width="1.5"/><path d="M22 6l-10 7L2 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-          </div>
-          <div><div class="ci-label">Email us</div><div class="ci-val">info@m1nd.in</div></div>
-        </a>
-        <button onclick="Calendly.initPopupWidget({url:'https://calendly.com/92-jain-n/30min'});return false;"
-                class="contact-item" data-cta="calendly_open">
-          <div class="ci-icon">
-            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M16 2v4M8 2v4M3 10h18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-          </div>
-          <div><div class="ci-label">Book a call</div><div class="ci-val">Schedule 30 minutes →</div></div>
-        </button>
       </div>
-    </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section class="section" id="contact"><div class="container narrow"><div class="panel">
+      <div class="head"><p class="label reveal">Start the conversation</p><h2 class="title reveal">Request an Intelligence Briefing.</h2></div>
+      <div class="cgrid">
+        <form class="reveal" action="https://formspree.io/f/xeewqwvq" method="POST">
+          <div class="two"><div class="fg"><label>Name</label><input type="text" name="name" required placeholder="Your name" /></div><div class="fg"><label>Email</label><input type="email" name="email" required placeholder="your@firm.com" /></div></div>
+          <div class="fg"><label>Organisation</label><input type="text" name="organisation" placeholder="Firm / Institution" /></div>
+          <div class="fg"><label>How can we help?</label><textarea name="message" rows="4" placeholder="Tell us about your matter, court, or requirement…"></textarea></div>
+          <button type="submit" class="btn btn-gold btn-full">Send Request</button>
+        </form>
+        <div class="reveal">
+          <a class="ci" href="mailto:info@m1nd.in"><svg viewBox="0 0 24 24" fill="none"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z" stroke="currentColor" stroke-width="1.5"/><path d="M22 6l-10 7L2 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><div><div class="cl">Email us</div><div class="cv">info@m1nd.in</div></div></a>
+          <button class="ci" type="button" id="book"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M16 2v4M8 2v4M3 10h18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><div><div class="cl">Book a call</div><div class="cv">Schedule 30 minutes &rarr;</div></div></button>
+        </div>
+      </div>
+    </div></div></section>
+
+    <footer>© 2026 <span class="g">M1ND</span> · info@m1nd.in · prototype "Signal Field" v3 — content preserved, presentation reimagined</footer>
   </div>
-</section>
+
+  <!-- who popups -->
+  <div class="pop" id="p-law"><div class="in"><button class="x">&times;</button><div class="tag">Lawyers &amp; Litigation Counsel</div><h3>12 hours before your hearing — here's what is ready.</h3><p class="scn">A litigation counsel opens a judge's profile before a bail hearing. M1ND surfaces the full decision-making pattern from thousands of cases: bail grant rate by offence cluster, language style, bench dynamics, and a one-sentence strategic implication.</p><div class="pf"><span class="d"></span>Bail grant rates, dismissal patterns, and bench dynamics across the full judgment record</div><div class="pf"><span class="d"></span>Your opponent's procedural tactics and settlement posture from the prior 24 months</div><div class="pf"><span class="d"></span>How this court has applied the relevant statute — the "spirit of the law" from 47,907 interpretations</div><div class="pf"><span class="d"></span>One strategic implication, stated explicitly — what to lead with, what to avoid</div><div class="res">"The hearing is the same. The preparation is not."</div></div></div>
+  <div class="pop" id="p-firm"><div class="in"><button class="x">&times;</button><div class="tag">Law Firms</div><h3>Practice development driven by data, not precedent and personality.</h3><p class="scn">A managing partner building an IPR practice reviews bench-affinity analytics across multiple High Courts — disposition velocity, partner-to-bench historical alignment, case-pipeline complexity ratios.</p><div class="pf"><span class="d"></span>Bench-affinity analytics: which partners perform best before which benches</div><div class="pf"><span class="d"></span>Practice niche development by court and matter type</div><div class="pf"><span class="d"></span>Case-pipeline prioritisation by complexity-to-outcome ratio</div><div class="res">"Intelligence-enhanced practice, not just faster search."</div></div></div>
+  <div class="pop" id="p-corp"><div class="in"><button class="x">&times;</button><div class="tag">Corporate Legal Departments</div><h3>Pre-brief before you escalate.</h3><p class="scn">In-house counsel queries the platform before escalating a regulatory matter to external counsel: the regulator's enforcement posture, procedural response patterns with success-rate annotations, and the court's interpretive history for the invoked provision.</p><div class="pf"><span class="d"></span>Regulator enforcement posture and precedent landscape before any formal engagement</div><div class="pf"><span class="d"></span>Statutory interpretation history for the specific provision at issue</div><div class="pf"><span class="d"></span>External counsel receives a fully pre-briefed matter</div><div class="res">"Reduce what goes to external counsel to the questions only they can answer."</div></div></div>
+  <div class="pop" id="p-govt"><div class="in"><button class="x">&times;</button><div class="tag">Ministry of Justice &amp; Judiciary</div><h3>The cause list, intelligently briefed. 30 seconds per matter.</h3><p class="scn">Before the day's cause list, each matter has a structured brief drawn from the public record: time on docket, how similar matters have been disposed, applicable statutory interpretations, and a disposition-velocity signal.</p><div class="pf"><span class="d"></span>Cause-list briefings: case history, statutory pattern, comparable disposals — per matter</div><div class="pf"><span class="d"></span>Backlog triage by matter type and complexity</div><div class="pf"><span class="d"></span>Aligned with eCourts Phase III — no new data collection required</div><div class="res">"30 seconds per matter. Every matter briefed."</div></div></div>
+
+  <div class="note">PROTOTYPE v3 · drag to parallax · scroll</div>
+
+<script src="https://assets.calendly.com/assets/external/widget.js" type="text/javascript" async></script>
+<script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://unpkg.com/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+<script>
+const REDUCED=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ===== SIGNAL FIELD — morph in once, then FREEZE & rotate on GPU (seamless) ===== */
+(function(){
+  const canvas=document.getElementById('field');
+  const r=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true,powerPreference:'high-performance'});
+  r.setPixelRatio(Math.min(devicePixelRatio,1.75));
+  const scene=new THREE.Scene();scene.fog=new THREE.FogExp2(0x060D1E,0.021);
+  const cam=new THREE.PerspectiveCamera(56,innerWidth/innerHeight,0.1,200);cam.position.z=30;
+  const grp=new THREE.Group();scene.add(grp);
+  function sz(){r.setSize(innerWidth,innerHeight,false);cam.aspect=innerWidth/innerHeight;cam.updateProjectionMatrix();}
+  const N=REDUCED?320:900,R=12;
+  const formed=new Float32Array(N*3),scat=new Float32Array(N*3);
+  for(let i=0;i<N;i++){const k=i+.5,phi=Math.acos(1-2*k/N),th=Math.PI*(1+Math.sqrt(5))*k,rr=R*(.55+.45*Math.random());
+    formed[i*3]=Math.cos(th)*Math.sin(phi)*rr;formed[i*3+1]=Math.sin(th)*Math.sin(phi)*rr*.82;formed[i*3+2]=Math.cos(phi)*rr;
+    scat[i*3]=(Math.random()*2-1)*30;scat[i*3+1]=(Math.random()*2-1)*22;scat[i*3+2]=(Math.random()*2-1)*30;}
+  const pos=new Float32Array(N*3);pos.set(scat);
+  const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.BufferAttribute(pos,3));
+  function spr(){const c=document.createElement('canvas');c.width=c.height=64;const x=c.getContext('2d');const gr=x.createRadialGradient(32,32,0,32,32,32);gr.addColorStop(0,'rgba(226,197,102,1)');gr.addColorStop(.25,'rgba(200,155,32,.8)');gr.addColorStop(1,'rgba(200,155,32,0)');x.fillStyle=gr;x.fillRect(0,0,64,64);return new THREE.CanvasTexture(c);}
+  const pm=new THREE.PointsMaterial({size:.5,map:spr(),transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,color:0xE2C566,opacity:0,sizeAttenuation:true});
+  grp.add(new THREE.Points(g,pm));
+  const TH=3.4,MAXE=REDUCED?420:1500,E=[];
+  for(let i=0;i<N&&E.length<MAXE;i++)for(let j=i+1;j<N;j++){const dx=formed[i*3]-formed[j*3],dy=formed[i*3+1]-formed[j*3+1],dz=formed[i*3+2]-formed[j*3+2];if(dx*dx+dy*dy+dz*dz<TH*TH){E.push(i,j);if(E.length>=MAXE)break;}}
+  const st={f:0},m={x:0,y:0,tx:0,ty:0};let frozen=false;
+  addEventListener('pointermove',e=>{m.tx=e.clientX/innerWidth*2-1;m.ty=e.clientY/innerHeight*2-1;},{passive:true});
+  if(!REDUCED&&window.gsap){gsap.to(st,{f:1,duration:3.0,ease:'power3.out'});gsap.to(pm,{opacity:.85,duration:1.8});}
+  else{st.f=1;pm.opacity=.8;for(let i=0;i<N*3;i++)pos[i]=formed[i];g.attributes.position.needsUpdate=true;frozen=true;}
+  const clk=new THREE.Clock();
+  (function tick(){const t=clk.getElapsedTime();
+    if(!frozen){const f=st.f;for(let i=0;i<N*3;i++)pos[i]=scat[i]+(formed[i]-scat[i])*f;
+      g.attributes.position.needsUpdate=true;
+      if(st.f>=0.999){frozen=true;} // bake -> stop CPU churn, rotate only from here
+    }
+    m.x+=(m.tx-m.x)*.045;m.y+=(m.ty-m.y)*.045;
+    grp.rotation.y=t*.018+m.x*.22;grp.rotation.x=m.y*.13;
+    r.render(scene,cam);requestAnimationFrame(tick);})();
+  sz();addEventListener('resize',sz);
+})();
+
+/* ===== CINEMATIC BRAIN ANIMATION — scatter → cluster → threads → brain + neurons ===== */
+(function(){
+  const cv=document.getElementById('pviz');if(!cv)return;
+  const ctx=cv.getContext('2d');
+  let W,H,DP,go=false,animT=0;
+  const NP=REDUCED?120:380;
+  const CLUST=[{x:.34,y:.37},{x:.5,y:.24},{x:.66,y:.37},{x:.26,y:.55},{x:.74,y:.55},{x:.5,y:.65}];
+  let scat=[],clus=[],brn=[],ci=[];
+
+  function inBrain(x,y){
+    const cx=x-.5,cy=y-.46;
+    return (cx+.135)**2/.225**2+cy**2/.295**2<1
+        ||(cx-.135)**2/.225**2+cy**2/.295**2<1
+        ||cx**2/.055**2+(cy-.25)**2/.088**2<1;
+  }
+
+  function setup(){
+    DP=Math.min(devicePixelRatio,2);
+    W=cv.width=cv.clientWidth*DP;
+    H=cv.height=cv.clientHeight*DP;
+    scat=[];clus=[];brn=[];ci=[];
+    const bp=[];
+    while(bp.length<NP){const x=Math.random(),y=Math.random()*.9+.05;if(inBrain(x,y))bp.push({x,y});}
+    for(let i=0;i<NP;i++){
+      scat.push({x:Math.random(),y:Math.random()});
+      let bd=Infinity,bk=0;
+      CLUST.forEach((c,k)=>{const d=(scat[i].x-c.x)**2+(scat[i].y-c.y)**2;if(d<bd){bd=d;bk=k;}});
+      ci.push(bk);const c=CLUST[bk];
+      clus.push({x:c.x+(Math.random()-.5)*.15,y:c.y+(Math.random()-.5)*.15});
+      brn.push(bp[i]||{x:c.x,y:c.y});
+    }
+  }
+
+  const e3=t=>t*t*(3-2*t);
+
+  function gp(i,t){
+    const s=scat[i],cl=clus[i],b=brn[i];
+    if(t<.4){const f=e3(t/.4);return{x:s.x+(cl.x-s.x)*f,y:s.y+(cl.y-s.y)*f};}
+    if(t<.68){const f=e3((t-.4)/.28),px=cl.x+(b.x-cl.x)*f*.5,py=cl.y+(b.y-cl.y)*f*.5;return{x:px,y:py};}
+    const f=e3((t-.68)/.32),mx=cl.x+(b.x-cl.x)*.5,my=cl.y+(b.y-cl.y)*.5;
+    return{x:mx+(b.x-mx)*f,y:my+(b.y-my)*f};
+  }
+
+  // neuron fires
+  const fires=[];let lastFire=0;
+  function spark(now){
+    const rate=55+Math.sin(now*.002)*15;
+    if(now-lastFire>rate&&fires.length<32){
+      fires.push({i:Math.floor(Math.random()*NP),j:Math.floor(Math.random()*NP),born:now,dur:260+Math.random()*320});
+      lastFire=now;
+    }
+    for(let k=fires.length-1;k>=0;k--)if(now-fires[k].born>fires[k].dur)fires.splice(k,1);
+  }
+
+  // brain lobe outline glow
+  function drawOutline(alpha){
+    [[-.135,.225,.295],[.135,.225,.295]].forEach(([ox,rx,ry])=>{
+      ctx.beginPath();
+      for(let k=0;k<=100;k++){const a=k/100*Math.PI*2;ctx.lineTo((.5+ox+rx*Math.cos(a))*W,(.46+ry*Math.sin(a))*H);}
+      ctx.closePath();
+      ctx.strokeStyle=`rgba(200,155,32,${alpha*.4})`;ctx.lineWidth=1.5*DP;
+      ctx.shadowColor='rgba(200,155,32,.6)';ctx.shadowBlur=22*DP;ctx.stroke();ctx.shadowBlur=0;
+    });
+  }
+
+  // floating intel labels
+  const LBLS=[
+    {txt:'157,508 records',       x:.1, y:.07, a:[0,.3],   d:.022},
+    {txt:'unstructured',          x:.86,y:.09, a:[.04,.32], d:-.016},
+    {txt:'4.1M entities',         x:.5, y:.95, a:[.06,.3],  d:.012},
+    {txt:'raw noise',             x:.18,y:.86, a:[0,.26],   d:.018},
+    {txt:'pattern emerging...',   x:.32,y:.17, a:[.3,.6],   d:.019},
+    {txt:'convergence',           x:.71,y:.15, a:[.34,.62],  d:-.014},
+    {txt:'clustering...',         x:.5, y:.92, a:[.36,.62],  d:.016},
+    {txt:'thread found',          x:.11,y:.5,  a:[.52,.78],  d:.022},
+    {txt:'47,907 interpretations',x:.88,y:.6,  a:[.55,.8],  d:-.015},
+    {txt:'signal: 0.91',          x:.5, y:.07, a:[.6,.82],   d:.01},
+    {txt:'judicial signal',       x:.35,y:.27, a:[.72,1],    d:.012},
+    {txt:'200+ profiles',         x:.68,y:.27, a:[.74,1],    d:-.01},
+    {txt:'confidence: 0.89',      x:.5, y:.9,  a:[.84,1],    d:.008},
+    {txt:'intelligence ready',    x:.5, y:.97, a:[.91,1],    d:.005},
+  ];
+
+  function drawLabels(t,now){
+    const time=now*.001;
+    ctx.font=`bold ${9*DP}px 'Courier New',monospace`;
+    LBLS.forEach(l=>{
+      const[a0,a1]=l.a;if(t<a0||t>a1+.1)return;
+      let al=t<a0+.05?(t-a0)/.05:t>a1?1-(t-a1)/.1:1;
+      al=Math.max(0,Math.min(1,al));
+      const px=(l.x+Math.sin(time*.5+l.d*22)*.022)*W;
+      const py=(l.y+Math.cos(time*.38+l.d*16)*.018)*H;
+      ctx.textAlign='center';
+      ctx.shadowColor='rgba(4,9,22,.98)';ctx.shadowBlur=11*DP;
+      ctx.fillStyle=`rgba(200,155,32,${al*.93})`;
+      ctx.fillText(l.txt,px,py);ctx.shadowBlur=0;
+    });
+  }
+
+  function draw(t){
+    const now=Date.now();
+    ctx.clearRect(0,0,W,H);
+    const bf=Math.max(0,(t-.68)/.32);
+
+    // thread connections
+    if(t>.3){
+      const ca=Math.min(1,(t-.3)/.2)*(t>.9?Math.max(0,1-(t-.9)/.07):.34);
+      ctx.lineWidth=.7*DP;
+      for(let i=0;i<NP;i+=2){const pi=gp(i,t);
+        for(let j=i+2;j<NP;j+=2){const pj=gp(j,t);
+          const dx=(pi.x-pj.x)*W,dy=(pi.y-pj.y)*H;
+          if(dx*dx+dy*dy<(.1*W)**2){
+            ctx.strokeStyle=`rgba(200,155,32,${ca*.42})`;
+            ctx.beginPath();ctx.moveTo(pi.x*W,pi.y*H);ctx.lineTo(pj.x*W,pj.y*H);ctx.stroke();}}}
+    }
+
+    // brain outline
+    if(bf>.25)drawOutline(Math.min(1,(bf-.25)/.4));
+
+    // neuron fires — big, dramatic
+    if(t>.82){
+      spark(now);
+      fires.forEach(f=>{
+        const age=(now-f.born)/f.dur,a=Math.sin(age*Math.PI);
+        const pi=gp(f.i,t),pj=gp(f.j,t);
+        // glow arc
+        ctx.beginPath();ctx.moveTo(pi.x*W,pi.y*H);ctx.lineTo(pj.x*W,pj.y*H);
+        ctx.strokeStyle=`rgba(226,197,102,${a*.96})`;ctx.lineWidth=2.2*DP;
+        ctx.shadowColor='rgba(200,155,32,.95)';ctx.shadowBlur=20*DP;ctx.stroke();
+        // bright core
+        ctx.strokeStyle=`rgba(255,245,200,${a*.75})`;ctx.lineWidth=.8*DP;ctx.shadowBlur=6*DP;ctx.stroke();
+        ctx.shadowBlur=0;
+        // endpoint flash
+        if(a>.5){[pi,pj].forEach(p=>{
+          ctx.beginPath();ctx.arc(p.x*W,p.y*H,5*DP*a,0,6.28);
+          ctx.fillStyle=`rgba(226,197,102,${a*.75})`;
+          ctx.shadowColor='rgba(200,155,32,.9)';ctx.shadowBlur=14*DP;
+          ctx.fill();ctx.shadowBlur=0;});}
+      });
+    }
+
+    // neuron dots
+    for(let i=0;i<NP;i++){
+      const p=gp(i,t);const r=(1.5+2.6*bf)*DP;
+      ctx.beginPath();ctx.arc(p.x*W,p.y*H,r,0,6.28);
+      if(bf>.15){
+        ctx.fillStyle=`rgba(200,155,32,${.18+.82*Math.min(1,(bf-.15)/.5)})`;
+        if(bf>.55){ctx.shadowColor='rgba(200,155,32,.6)';ctx.shadowBlur=8*DP;}
+      }else ctx.fillStyle=`rgba(194,206,223,${.15+.48*t})`;
+      ctx.fill();ctx.shadowBlur=0;
+    }
+
+    drawLabels(t,now);
+
+    const lbl=document.getElementById('brain-phase-label');
+    if(lbl){
+      if(t<.22)lbl.textContent='raw data drifting in...';
+      else if(t<.46)lbl.textContent='patterns clustering...';
+      else if(t<.7)lbl.textContent='threads joining...';
+      else if(t<.9)lbl.textContent='signal emerging...';
+      else lbl.textContent='neurons firing ✓';
+    }
+    const cap=document.getElementById('brain-caption');
+    if(cap)cap.style.opacity=bf>.4?Math.min(1,(bf-.4)/.3).toString():'0';
+  }
+
+  function run(){animT=Math.min(1,animT+.0033);draw(animT);requestAnimationFrame(run);}
+
+  setup();draw(0);
+  addEventListener('resize',()=>{setup();draw(animT);});
+  new IntersectionObserver((es,o)=>{es.forEach(e=>{if(e.isIntersecting&&!go){go=true;
+    if(REDUCED){animT=1;draw(1);}else run();
+    o.disconnect();}});},{threshold:.2}).observe(cv);
+})();
+
+/* ===== reveals, count-ups, nav, popups, smooth scroll ===== */
+if(window.gsap&&window.ScrollTrigger){gsap.registerPlugin(ScrollTrigger);
+  gsap.set('[data-h]',{opacity:0,y:24});
+  gsap.to('[data-h]',{opacity:1,y:0,duration:1.05,stagger:.16,delay:.45,ease:'power3.out'});
+  gsap.utils.toArray('.reveal').forEach(el=>gsap.to(el,{opacity:1,y:0,duration:.8,ease:'power3.out',scrollTrigger:{trigger:el,start:'top 90%'}}));
+}
+// word-by-word surreal reveal for hero body text
+(function(){
+  const GOLD=new Set(['intelligence','actionable','M1ND','proactive','bulletproof','insight','knowledge','signals']);
+  document.querySelectorAll('[data-wordreveal]').forEach(el=>{
+    const words=el.textContent.trim().split(/\s+/);
+    el.innerHTML=words.map((w,i)=>{
+      const key=w.replace(/[^a-zA-Z0-9]/g,'');
+      const cls=GOLD.has(key)?'w-em gf':'w-em';
+      return `<span class="${cls}" style="animation-delay:${(.85+i*.055).toFixed(2)}s">${w}</span>`;
+    }).join(' ');
+  });
+})();
+function cup(el){const t=parseFloat(el.dataset.target),d=+(el.dataset.dec||0),su=el.dataset.suffix||'';let s=null;
+  function step(ts){if(!s)s=ts;const p=Math.min((ts-s)/1400,1),e=1-Math.pow(1-p,3),v=t*e;el.textContent=(d?v.toFixed(d):Math.round(v).toLocaleString('en-IN'))+su;if(p<1)requestAnimationFrame(step);}requestAnimationFrame(step);}
+document.querySelectorAll('.n[data-target]').forEach(el=>{new IntersectionObserver((es,o)=>{es.forEach(e=>{if(e.isIntersecting){cup(el);o.disconnect();}})},{threshold:.5}).observe(el);});
+addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('scrolled',scrollY>40),{passive:true});
+document.querySelectorAll('[data-pop]').forEach(c=>c.addEventListener('click',()=>document.getElementById(c.dataset.pop).classList.add('open')));
+document.querySelectorAll('.pop').forEach(p=>p.addEventListener('click',e=>{if(e.target===p||e.target.classList.contains('x'))p.classList.remove('open');}));
+addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelectorAll('.pop.open').forEach(p=>p.classList.remove('open'));});
+document.getElementById('book').addEventListener('click',()=>{if(window.Calendly)Calendly.initPopupWidget({url:'https://calendly.com/92-jain-n/30min'});});
+if(!REDUCED&&window.Lenis){const l=new Lenis({lerp:.1,wheelMultiplier:1});function raf(t){l.raf(t);requestAnimationFrame(raf);}requestAnimationFrame(raf);if(window.ScrollTrigger)l.on('scroll',ScrollTrigger.update);}
+
+/* ===== FULL-VIEWPORT AI PARTICLE FIELD — reactive, calm, burst, split, merge ===== */
+(function(){
+  if(REDUCED)return;
+  const cv=document.getElementById('particle-field');if(!cv)return;
+  const ctx=cv.getContext('2d');
+  let W,H,DP;
+
+  // Types: R=Reactive(fast,short trail), C=Calm(slow,long trail), B=Burst(machine-gun spikes)
+  const CFG={
+    R:{trail:10,maxSpd:.014,noise:.002,sz:1.5},
+    C:{trail:60,maxSpd:.0038,noise:.0003,sz:2.9},
+    B:{trail:20,maxSpd:.01, noise:.0007,sz:1.9},
+    X:{trail:16,maxSpd:.011,noise:.0015,sz:1.3}   // split-children
+  };
+
+  let pts=[];
+  function mkPt(x,y,vx,vy,type,life){
+    const a=Math.random()*Math.PI*2,cfg=CFG[type]||CFG.C;
+    return{x:x??Math.random(),y:y??Math.random(),
+      vx:vx??(Math.cos(a)*cfg.maxSpd*.5),vy:vy??(Math.sin(a)*cfg.maxSpd*.5),
+      type,trail:[],ph:Math.random()*Math.PI*2,sz:cfg.sz*(0.8+Math.random()*.4),
+      life:life??1,maxLife:life??1,
+      burstT:type==='B'?80+Math.random()*160:9999,
+      splitT:300+Math.random()*500,
+      mergeTarget:-1};
+  }
+
+  function init(){
+    pts=[];
+    for(let i=0;i<20;i++)pts.push(mkPt(null,null,null,null,'R'));
+    for(let i=0;i<32;i++)pts.push(mkPt(null,null,null,null,'C'));
+    for(let i=0;i<18;i++)pts.push(mkPt(null,null,null,null,'B'));
+  }
+
+  function setup(){
+    DP=Math.min(devicePixelRatio,1.5);
+    W=cv.width=innerWidth*DP;H=cv.height=innerHeight*DP;
+  }
+
+  function upd(p){
+    const cfg=CFG[p.type]||CFG.C;
+
+    // Burst: machine-gun direction spikes
+    if(p.type==='B'){p.burstT--;
+      if(p.burstT<=0){const a=Math.random()*Math.PI*2;p.vx+=Math.cos(a)*.018;p.vy+=Math.sin(a)*.018;p.burstT=50+Math.random()*120;}}
+
+    // Reactive: jittery noise
+    if(p.type==='R'){p.vx+=(Math.random()-.5)*.0028;p.vy+=(Math.random()-.5)*.0028;}
+
+    // Calm merge: weakly attract to nearest calm particle
+    if(p.type==='C'){
+      let bd=Infinity,bi=-1;
+      for(let i=0;i<pts.length;i++){if(pts[i]===p||pts[i].type!=='C')continue;
+        const d=(pts[i].x-p.x)**2+(pts[i].y-p.y)**2;if(d<bd){bd=d;bi=i;}}
+      if(bi>=0&&bd<.06&&bd>.001){p.vx+=(pts[bi].x-p.x)*.0001;p.vy+=(pts[bi].y-p.y)*.0001;}
+      else if(bd<.001){p.vx+=(Math.random()-.5)*.006;p.vy+=(Math.random()-.5)*.006;}
+    }
+
+    // General noise
+    p.vx+=(Math.random()-.5)*cfg.noise;p.vy+=(Math.random()-.5)*cfg.noise;
+    const spd=Math.hypot(p.vx,p.vy);
+    if(spd>cfg.maxSpd){p.vx=p.vx/spd*cfg.maxSpd;p.vy=p.vy/spd*cfg.maxSpd;}
+    if(spd<cfg.maxSpd*.04){const a=Math.random()*Math.PI*2;p.vx+=Math.cos(a)*cfg.maxSpd*.12;p.vy+=Math.sin(a)*cfg.maxSpd*.12;}
+
+    p.x+=p.vx;p.y+=p.vy;
+    // Toroidal wrap — particles cross between sides
+    if(p.x<-.02)p.x=1.02;if(p.x>1.02)p.x=-.02;
+    if(p.y<-.02)p.y=1.02;if(p.y>1.02)p.y=-.02;
+
+    // Fade life (children)
+    if(p.maxLife<1)p.life=Math.max(0,p.life-1/160);
+
+    // Splitting: spawn perpendicular child
+    if(p.type!=='X'&&pts.length<95){p.splitT--;
+      if(p.splitT<=0){
+        const s=Math.hypot(p.vx,p.vy)||.001;
+        pts.push(mkPt(p.x,p.y,-p.vy/s*CFG.X.maxSpd*.9,p.vx/s*CFG.X.maxSpd*.9,'X',.7));
+        p.splitT=350+Math.random()*500;}}
+  }
+
+  let fr=0;
+  function draw(){
+    fr++;ctx.clearRect(0,0,W,H);
+
+    // Prune dead
+    for(let k=pts.length-1;k>=0;k--)if(pts[k].life<=0)pts.splice(k,1);
+    pts.forEach(upd);
 
 
-<!-- ════════════════════════════════════════════
-     FOOTER
-     ════════════════════════════════════════════ -->
-<footer class="footer">
-  <div class="container footer-inner">
-    <a href="#top" class="footer-brand">
-      <img src="logo-transparent.png" alt="" aria-hidden="true" />
-      <span><span class="gold">M1ND</span></span>
-    </a>
-    <nav class="footer-nav" aria-label="Footer navigation">
-      <a href="#what-we-do">What We Do</a>
-      <a href="#data">The Data</a>
-      <a href="#who">Who It's For</a>
-      <a href="#contact">Contact</a>
-    </nav>
-    <div class="footer-copy">
-      <span>© 2026 M1ND</span>
-      <span class="sep">·</span>
-      <a href="mailto:info@m1nd.in">info@m1nd.in</a>
-      <span class="sep">·</span>
-      <span>We use standard analytics to understand how our site is used.</span>
-    </div>
-  </div>
-</footer>
 
-<!-- Calendly JS -->
-<script src="https://assets.calendly.com/assets/external/widget.js" type="text/javascript" defer></script>
-<script src="app.js" defer></script>
+    // Particles
+    const t=Date.now();
+    pts.forEach(p=>{
+      const cfg=CFG[p.type]||CFG.C;
+      const pulse=.5+.5*Math.sin(t*.003+p.ph);
+      const r=p.sz*(1+.4*pulse)*DP,al=p.life*(.4+.55*pulse);
+      ctx.beginPath();ctx.arc(p.x*W,p.y*H,r*3.2,0,6.28);
+      ctx.fillStyle=`rgba(200,155,32,${al*.07})`;ctx.fill();
+      ctx.beginPath();ctx.arc(p.x*W,p.y*H,r,0,6.28);
+      ctx.fillStyle=`rgba(200,155,32,${al})`;
+      ctx.shadowColor='rgba(200,155,32,.5)';ctx.shadowBlur=r*2.2;
+      ctx.fill();ctx.shadowBlur=0;
+    });
+
+    requestAnimationFrame(draw);
+  }
+
+  setup();init();draw();
+  addEventListener('resize',setup);
+})();
+</script>
 </body>
 </html>
-
