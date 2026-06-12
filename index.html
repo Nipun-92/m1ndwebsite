@@ -303,10 +303,10 @@
       <div class="head"><p class="label reveal">The scale behind the intelligence</p><h2 class="title reveal">Built from the official record.<br>Growing with every court.</h2>
       <p class="body center reveal">A snapshot of what is live and indexed today — this corpus expands with every new ingestion run.</p></div>
       <div class="stats">
-        <div class="glass stat reveal"><div class="n" data-target="157508">0</div><div class="l">Cases Ingested</div><div class="s">Patna High Court · 2021–2025</div></div>
-        <div class="glass stat reveal"><div class="n" data-target="4.1" data-dec="1" data-suffix="M">0</div><div class="l">Named Entity Extractions</div><div class="s">Judges · lawyers · statutes · organisations</div></div>
+        <div class="glass stat reveal"><div class="n" data-target="162848">0</div><div class="l">Cases Ingested</div><div class="s">Patna &amp; Gujarat High Courts · 2016–2024</div></div>
+        <div class="glass stat reveal"><div class="n" data-target="4.2" data-dec="1" data-suffix="M">0</div><div class="l">Named Entity Extractions</div><div class="s">Judges · lawyers · statutes · organisations</div></div>
         <div class="glass stat reveal"><div class="n" data-target="47907">0</div><div class="l">Statute Interpretations</div><div class="s">How courts actually apply each law</div></div>
-        <div class="glass stat reveal"><div class="n" data-target="200" data-suffix="+">0</div><div class="l">Judicial Profiles</div><div class="s">Signals computed &amp; indexed</div></div>
+        <div class="glass stat reveal"><div class="n" data-target="47.5" data-dec="1" data-suffix="%">0</div><div class="l">Citations Linked to Statute Text</div><div class="s">365,687 of 770,045 mapped to the law</div></div>
       </div>
       <div class="glass reveal" style="padding:.5rem .8rem 1.4rem" id="brain-section">
         <div class="brain-stage">
@@ -350,6 +350,16 @@
         <div class="glass card reveal"><h3>Indian infrastructure · Data sovereignty</h3><p>Processed on Indian infrastructure. Public records only. Privacy by design.</p></div>
         <div class="glass card reveal"><h3>Auditable, not opaque</h3><p>Every signal traces to its source. Methodology is versioned and documented. The intelligence we deliver can be questioned, examined, and defended.</p></div>
       </div>
+      <div class="reveal" style="margin-top:2.4rem;text-align:center">
+        <p class="label" style="opacity:.72;letter-spacing:.18em">Recognised &amp; supported by</p>
+        <div style="display:flex;gap:2.4rem;align-items:center;justify-content:center;flex-wrap:wrap;margin-top:1.1rem">
+          <img src="nvidia-inception.svg" alt="NVIDIA Inception Program" style="height:52px;border-radius:8px" />
+          <div style="text-align:center">
+            <img src="ebs.png" alt="EBS Incubator, Heriot-Watt University" style="height:44px;display:block;border:1px solid var(--line);border-radius:8px" />
+            <div style="font-size:.72rem;color:var(--gold-soft);margin-top:.45rem;letter-spacing:.03em">EBS Incubator, Heriot-Watt University — Cohort 5 Runner-Up</div>
+          </div>
+        </div>
+      </div>
     </div></section>
 
     <!-- PIPELINE -->
@@ -367,7 +377,7 @@
               <div class="pipe-dot"></div>
               <div class="pipe-label">Court Record</div>
               <div class="pipe-sub">Official Govt Data</div>
-              <p class="pipe-desc">157,508+ cases from official government sources — structured, versioned, continuously updated.</p>
+              <p class="pipe-desc">162,848+ cases from official government sources — structured, versioned, continuously updated.</p>
             </div>
             <div class="pipe-stage">
               <div class="pipe-dot"></div>
@@ -531,9 +541,9 @@ const REDUCED=matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   // floating intel labels
   const LBLS=[
-    {txt:'157,508 records',       x:.1, y:.07, a:[0,.3],   d:.022},
+    {txt:'162,848 records',       x:.1, y:.07, a:[0,.3],   d:.022},
     {txt:'unstructured',          x:.86,y:.09, a:[.04,.32], d:-.016},
-    {txt:'4.1M entities',         x:.5, y:.95, a:[.06,.3],  d:.012},
+    {txt:'4.2M entities',         x:.5, y:.95, a:[.06,.3],  d:.012},
     {txt:'raw noise',             x:.18,y:.86, a:[0,.26],   d:.018},
     {txt:'pattern emerging...',   x:.32,y:.17, a:[.3,.6],   d:.019},
     {txt:'convergence',           x:.71,y:.15, a:[.34,.62],  d:-.014},
@@ -542,7 +552,7 @@ const REDUCED=matchMedia('(prefers-reduced-motion: reduce)').matches;
     {txt:'47,907 interpretations',x:.88,y:.6,  a:[.55,.8],  d:-.015},
     {txt:'signal: 0.91',          x:.5, y:.07, a:[.6,.82],   d:.01},
     {txt:'judicial signal',       x:.35,y:.27, a:[.72,1],    d:.012},
-    {txt:'200+ profiles',         x:.68,y:.27, a:[.74,1],    d:-.01},
+    {txt:'47.5% mapped to law',   x:.68,y:.27, a:[.74,1],    d:-.01},
     {txt:'confidence: 0.89',      x:.5, y:.9,  a:[.84,1],    d:.008},
     {txt:'intelligence ready',    x:.5, y:.97, a:[.91,1],    d:.005},
   ];
