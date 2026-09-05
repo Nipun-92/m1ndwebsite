@@ -4,13 +4,38 @@
             contact form, GA4 event tracking.
    Zero dependencies. Runs via `defer` after DOM is ready.
    ================================================================ */
+/**
+ * M1ND — Core Interactivity
+ * Handles: Scroll Reveals, Popups, and Header Transitions
+ */
 
 'use strict';
+document.addEventListener('DOMContentLoaded', () => {
+    // 1. Navigation Header Transition
+    const navbar = document.querySelector('.nav-bar');
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 50) {
+            navbar.classList.add('scrolled');
+        } else {
+            navbar.classList.remove('scrolled');
+        }
+    });
 
 /* ── GA4 helper — fires only when analytics is loaded ── */
 function track(event, params) {
   if (typeof gtag !== 'undefined') gtag('event', event, params || {});
 }
+    // 2. Scroll Reveal Observer
+    // This makes elements with class "reveal" fade in as they enter the viewport
+    const revealCallback = (entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                // Optional: stop observing once revealed
+                // observer.unobserve(entry.target);
+            }
+        });
+    };
 
 /* ================================================================
    1. NAVIGATION
@@ -19,11 +44,16 @@ const navbar    = document.getElementById('navbar');
 const hamburger = document.getElementById('hamburger');
 const navLinks  = document.getElementById('navLinks');
 const allLinks  = document.querySelectorAll('.nav-link, .footer-nav a');
+    const revealObserver = new IntersectionObserver(revealCallback, {
+        threshold: 0.15,
+        rootMargin: '0px 0px -50px 0px'
+    });
 
 /* Sticky shadow on scroll */
 window.addEventListener('scroll', () => {
   navbar.classList.toggle('scrolled', window.scrollY > 40);
 }, { passive: true });
+    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
 /* Hamburger toggle */
 hamburger?.addEventListener('click', () => {
@@ -31,6 +61,12 @@ hamburger?.addEventListener('click', () => {
   hamburger.classList.toggle('open', open);
   hamburger.setAttribute('aria-expanded', open);
 });
+    // 3. "Who It's For" Popup Logic
+    const popupWrap = document.querySelector('.who-popup-wrap');
+    const popupClose = document.querySelector('.popup-close');
+    
+    // Select only the clickable cards
+    const cards = document.querySelectorAll('.who-clickable');
 
 /* Close mobile nav on link click */
 navLinks?.querySelectorAll('a, button').forEach(el =>
@@ -40,6 +76,13 @@ navLinks?.querySelectorAll('a, button').forEach(el =>
     hamburger.setAttribute('aria-expanded', 'false');
   })
 );
+    const openPopup = (card) => {
+        const title = card.querySelector('h3').textContent;
+        // In a real app, you could fetch content based on title
+        // For now, we show the wrap
+        popupWrap.hidden = false;
+        document.body.style.overflow = 'hidden'; // Prevent scroll
+    };
 
 /* Active nav link highlighting on scroll */
 const sections = document.querySelectorAll('section[id]');
@@ -54,11 +97,22 @@ const navObserver = new IntersectionObserver(entries => {
   });
 }, { threshold: 0.4, rootMargin: `-${parseInt(getComputedStyle(document.documentElement).getPropertyValue('--nav-h'))}px 0px 0px 0px` });
 sections.forEach(s => navObserver.observe(s));
+    const closePopup = () => {
+        popupWrap.hidden = true;
+        document.body.style.overflow = '';
+    };
 
 /* Track nav CTA clicks */
 document.querySelectorAll('[data-cta]').forEach(el =>
   el.addEventListener('click', () => track('cta_click', { button: el.dataset.cta }))
 );
+    cards.forEach(card => {
+        card.addEventListener('click', () => openPopup(card));
+        // Keyboard support
+        card.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') openPopup(card);
+        });
+    });
 
 /* ================================================================
    2. SCROLL REVEAL — fade-in-up as elements enter viewport
@@ -73,6 +127,12 @@ const revealObserver = new IntersectionObserver(entries => {
     }
   });
 }, { threshold: 0.12 });
+    if (popupClose) popupClose.addEventListener('click', closePopup);
+    
+    // Close on background click
+    popupWrap?.addEventListener('click', (e) => {
+        if (e.target === popupWrap) closePopup();
+    });
 
 document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
@@ -188,6 +248,9 @@ if (pipelineWrap) {
         pipelineWrap.classList.add('visible');
         pipelineObserver.unobserve(pipelineWrap);
       }
+    // Close on Escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !popupWrap.hidden) closePopup();
     });
   }, { threshold: 0.2 });
   pipelineObserver.observe(pipelineWrap);
@@ -240,6 +303,7 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
     const navH = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--nav-h')) || 68;
     window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - navH, behavior: 'smooth' });
   });
+    console.log('Legal M1ND: UI initialized.');
 });
 
 /* ================================================================

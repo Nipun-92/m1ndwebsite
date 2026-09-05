@@ -306,7 +306,7 @@
         <div class="glass stat reveal"><div class="n" data-target="162848">0</div><div class="l">Cases Ingested</div><div class="s">Patna &amp; Gujarat High Courts · 2016–2024</div></div>
         <div class="glass stat reveal"><div class="n" data-target="4.2" data-dec="1" data-suffix="M">0</div><div class="l">Named Entity Extractions</div><div class="s">Judges · lawyers · statutes · organisations</div></div>
         <div class="glass stat reveal"><div class="n" data-target="47907">0</div><div class="l">Statute Interpretations</div><div class="s">How courts actually apply each law</div></div>
-        <div class="glass stat reveal"><div class="n" data-target="47.5" data-dec="1" data-suffix="%">0</div><div class="l">Citations Linked to Statute Text</div><div class="s">365,687 of 770,045 mapped to the law</div></div>
+        <div class="glass stat reveal"><div class="n" data-target="47.5" data-dec="1" data-suffix="%">0</div><div class="l">Citations Linked to Statute Text</div><div class="s">956,476 of 1,378,382 mapped to the law</div></div>
         <div class="glass stat reveal"><div class="n" data-target="220414">0</div><div class="l">Legal Actors Mapped</div><div class="s">Judges · counsel · parties · organisations — one graph</div></div>
         <div class="glass stat reveal"><div class="n" data-target="1112">0</div><div class="l">Intelligence Signals</div><div class="s">Composite signals, each traceable to a source judgment</div></div>
         <div class="glass stat reveal"><div class="n" data-target="7">0</div><div class="l">Fused Intelligence Layers</div><div class="s">Text · statute · precedent · network · behavioural · OSINT</div></div>
@@ -371,7 +371,7 @@
               <div class="pipe-dot"></div>
               <div class="pipe-label">Court Record</div>
               <div class="pipe-sub">Official Govt Data</div>
-              <p class="pipe-desc">162,848+ cases from official government sources — structured, versioned, continuously updated.</p>
+              <p class="pipe-desc">265,736+ cases from official government sources — structured, versioned, continuously updated.</p>
             </div>
             <div class="pipe-stage">
               <div class="pipe-dot"></div>
@@ -429,7 +429,7 @@
   </div>
 
   <!-- who popups -->
-  <div class="pop" id="p-law"><div class="in"><button class="x">&times;</button><div class="tag">Lawyers &amp; Litigation Counsel</div><h3>12 hours before your hearing — here's what is ready.</h3><p class="scn">A litigation counsel opens a judge's profile before a bail hearing. M1ND surfaces the full decision-making pattern from thousands of cases: bail grant rate by offence cluster, language style, bench dynamics, and a one-sentence strategic implication.</p><div class="pf"><span class="d"></span>Bail grant rates, dismissal patterns, and bench dynamics across the full judgment record</div><div class="pf"><span class="d"></span>Your opponent's procedural tactics and settlement posture from the prior 24 months</div><div class="pf"><span class="d"></span>How this court has applied the relevant statute — the "spirit of the law" from 47,907 interpretations</div><div class="pf"><span class="d"></span>One strategic implication, stated explicitly — what to lead with, what to avoid</div><div class="res">"The hearing is the same. The preparation is not."</div></div></div>
+  <div class="pop" id="p-law"><div class="in"><button class="x">&times;</button><div class="tag">Lawyers &amp; Litigation Counsel</div><h3>12 hours before your hearing — here's what is ready.</h3><p class="scn">A litigation counsel opens a judge's profile before a bail hearing. M1ND surfaces the full decision-making pattern from thousands of cases: bail grant rate by offence cluster, language style, bench dynamics, and a one-sentence strategic implication.</p><div class="pf"><span class="d"></span>Bail grant rates, dismissal patterns, and bench dynamics across the full judgment record</div><div class="pf"><span class="d"></span>Your opponent's procedural tactics and settlement posture from the prior 24 months</div><div class="pf"><span class="d"></span>How this court has applied the relevant statute — the "spirit of the law" from 143,849 interpretations</div><div class="pf"><span class="d"></span>One strategic implication, stated explicitly — what to lead with, what to avoid</div><div class="res">"The hearing is the same. The preparation is not."</div></div></div>
   <div class="pop" id="p-firm"><div class="in"><button class="x">&times;</button><div class="tag">Law Firms</div><h3>Practice development driven by data, not precedent and personality.</h3><p class="scn">A managing partner building an IPR practice reviews bench-affinity analytics across multiple High Courts — disposition velocity, partner-to-bench historical alignment, case-pipeline complexity ratios.</p><div class="pf"><span class="d"></span>Bench-affinity analytics: which partners perform best before which benches</div><div class="pf"><span class="d"></span>Practice niche development by court and matter type</div><div class="pf"><span class="d"></span>Case-pipeline prioritisation by complexity-to-outcome ratio</div><div class="res">"Intelligence-enhanced practice, not just faster search."</div></div></div>
   <div class="pop" id="p-corp"><div class="in"><button class="x">&times;</button><div class="tag">Corporate Legal Departments</div><h3>Pre-brief before you escalate.</h3><p class="scn">In-house counsel queries the platform before escalating a regulatory matter to external counsel: the regulator's enforcement posture, procedural response patterns with success-rate annotations, and the court's interpretive history for the invoked provision.</p><div class="pf"><span class="d"></span>Regulator enforcement posture and precedent landscape before any formal engagement</div><div class="pf"><span class="d"></span>Statutory interpretation history for the specific provision at issue</div><div class="pf"><span class="d"></span>External counsel receives a fully pre-briefed matter</div><div class="res">"Reduce what goes to external counsel to the questions only they can answer."</div></div></div>
   <div class="pop" id="p-govt"><div class="in"><button class="x">&times;</button><div class="tag">Ministry of Justice &amp; Judiciary</div><h3>The cause list, intelligently briefed. 30 seconds per matter.</h3><p class="scn">Before the day's cause list, each matter has a structured brief drawn from the public record: time on docket, how similar matters have been disposed, applicable statutory interpretations, and a disposition-velocity signal.</p><div class="pf"><span class="d"></span>Cause-list briefings: case history, statutory pattern, comparable disposals — per matter</div><div class="pf"><span class="d"></span>Backlog triage by matter type and complexity</div><div class="pf"><span class="d"></span>Aligned with eCourts Phase III — no new data collection required</div><div class="res">"30 seconds per matter. Every matter briefed."</div></div></div>
@@ -547,7 +547,7 @@ const REDUCED=matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   // floating intel labels
   const LBLS=[
-    {txt:'162,848 records',       x:.1, y:.07, a:[0,.3],   d:.022},
+    {txt:'265,736 records',       x:.1, y:.07, a:[0,.3],   d:.022},
     {txt:'unstructured',          x:.86,y:.09, a:[.04,.32], d:-.016},
     {txt:'4.2M entities',         x:.5, y:.95, a:[.06,.3],  d:.012},
     {txt:'raw noise',             x:.18,y:.86, a:[0,.26],   d:.018},
@@ -555,8 +555,8 @@ const REDUCED=matchMedia('(prefers-reduced-motion: reduce)').matches;
     {txt:'convergence',           x:.71,y:.15, a:[.34,.62],  d:-.014},
     {txt:'clustering...',         x:.5, y:.92, a:[.36,.62],  d:.016},
     {txt:'thread found',          x:.11,y:.5,  a:[.52,.78],  d:.022},
-    {txt:'47,907 interpretations',x:.88,y:.6,  a:[.55,.8],  d:-.015},
-    {txt:'220,414 actors',        x:.22,y:.72, a:[.58,.84], d:-.013},
+    {txt:'143,849 interpretations',x:.88,y:.6,  a:[.55,.8],  d:-.015},
+    {txt:'225,976 actors',        x:.22,y:.72, a:[.58,.84], d:-.013},
     {txt:'1,112 signals',         x:.66,y:.8,  a:[.66,.9],  d:.011},
     {txt:'signal: 0.91',          x:.5, y:.07, a:[.6,.82],   d:.01},
     {txt:'judicial signal',       x:.35,y:.27, a:[.72,1],    d:.012},
