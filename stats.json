@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-07T04:16:12+00:00",
+  "generated_at": "2026-09-07T04:17:56+00:00",
   "source": "Legal M1ND corpus (Postgres). Every figure is a live count; see commands_scripts/publish_stats.py for the SQL.",
   "figures": {
     "cases": 265736,
