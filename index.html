@@ -303,12 +303,12 @@
       <div class="head"><p class="label reveal">The scale behind the intelligence</p><h2 class="title reveal">Built from the official record.<br>Growing with every court.</h2>
       <p class="body center reveal">A snapshot of what is live and indexed today — this corpus expands with every new ingestion run.</p></div>
       <div class="stats">
-        <div class="glass stat reveal"><div class="n" data-target="162848">0</div><div class="l">Cases Ingested</div><div class="s">Patna &amp; Gujarat High Courts · 2016–2024</div></div>
-        <div class="glass stat reveal"><div class="n" data-target="4.2" data-dec="1" data-suffix="M">0</div><div class="l">Named Entity Extractions</div><div class="s">Judges · lawyers · statutes · organisations</div></div>
-        <div class="glass stat reveal"><div class="n" data-target="47907">0</div><div class="l">Statute Interpretations</div><div class="s">How courts actually apply each law</div></div>
-        <div class="glass stat reveal"><div class="n" data-target="47.5" data-dec="1" data-suffix="%">0</div><div class="l">Citations Linked to Statute Text</div><div class="s">956,476 of 1,378,382 mapped to the law</div></div>
-        <div class="glass stat reveal"><div class="n" data-target="220414">0</div><div class="l">Legal Actors Mapped</div><div class="s">Judges · counsel · parties · organisations — one graph</div></div>
-        <div class="glass stat reveal"><div class="n" data-target="1112">0</div><div class="l">Intelligence Signals</div><div class="s">Composite signals, each traceable to a source judgment</div></div>
+        <div class="glass stat reveal"><div class="n" data-stat="cases" data-fmt="int" data-target="265736">0</div><div class="l">Cases Ingested</div><div class="s">6 courts · 2021–2025</div></div>
+        <div class="glass stat reveal"><div class="n" data-stat="entities" data-fmt="millions" data-target="18.5" data-dec="1" data-suffix="M">0</div><div class="l">Named Entity Extractions</div><div class="s">Judges · lawyers · statutes · organisations</div></div>
+        <div class="glass stat reveal"><div class="n" data-stat="interpretations" data-fmt="int" data-target="143849">0</div><div class="l">Statute Interpretations</div><div class="s">How courts actually apply each law</div></div>
+        <div class="glass stat reveal"><div class="n" data-stat="citations_pct" data-fmt="pct" data-target="69.4" data-dec="1" data-suffix="%">0</div><div class="l">Citations Linked to Statute Text</div><div class="s">956,476 of 1,378,382 mapped to the law</div></div>
+        <div class="glass stat reveal"><div class="n" data-stat="actors" data-fmt="int" data-target="225976">0</div><div class="l">Legal Actors Mapped</div><div class="s">Judges · counsel · parties · organisations — one graph</div></div>
+        <div class="glass stat reveal"><div class="n" data-stat="signals" data-fmt="int" data-target="1112">0</div><div class="l">Intelligence Signals</div><div class="s">Composite signals, each traceable to a source judgment</div></div>
         <div class="glass stat reveal"><div class="n" data-target="7">0</div><div class="l">Fused Intelligence Layers</div><div class="s">Text · statute · precedent · network · behavioural · OSINT</div></div>
         <div class="glass stat reveal"><div class="n" data-target="8">0</div><div class="l">Behavioural Instruments</div><div class="s">Research-grade; certified-psychologist validation in progress</div></div>
       </div>
@@ -794,6 +794,40 @@ if(!REDUCED&&window.Lenis){const l=new Lenis({lerp:.1,wheelMultiplier:1});functi
 
   setup();init();draw();
   addEventListener('resize',setup);
+})();
+</script>
+
+<!-- m1nd-stats-runtime: the numbers come from stats.json, which is generated
+     from the database. The values baked into the HTML above are the fallback,
+     so the page is never WRONG when this fetch fails - only less fresh. -->
+<script>
+(function () {
+  fetch('stats.json', { cache: 'no-cache' })
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .then(function (s) {
+      if (!s || !s.figures) return;
+      var f = s.figures;
+      document.querySelectorAll('[data-stat]').forEach(function (el) {
+        var v = f[el.getAttribute('data-stat')];
+        if (v === undefined || v === null) return;
+        var fmt = el.getAttribute('data-fmt');
+        if (fmt === 'millions') v = (v / 1e6).toFixed(1);
+        else if (fmt === 'pct')  v = Number(v).toFixed(1);
+        else v = String(Math.round(v));
+        el.setAttribute('data-target', v);
+        // If the count-up already ran, show the fresh value immediately.
+        if (el.textContent.trim() !== '0') el.textContent = v;
+      });
+      if (s.sub_labels) {
+        document.querySelectorAll('[data-stat]').forEach(function (el) {
+          var card = el.parentElement;
+          var sub = card && card.querySelector('.s');
+          var t = s.sub_labels[el.getAttribute('data-stat')];
+          if (sub && t) sub.textContent = t;
+        });
+      }
+    })
+    .catch(function () { /* the baked-in values stand */ });
 })();
 </script>
 </body>

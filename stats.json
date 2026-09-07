@@ -1,0 +1,27 @@
+{
+  "generated_at": "2026-09-07T04:16:12+00:00",
+  "source": "Legal M1ND corpus (Postgres). Every figure is a live count; see commands_scripts/publish_stats.py for the SQL.",
+  "figures": {
+    "cases": 265736,
+    "matters": 255941,
+    "actors": 225976,
+    "entities": 18541371,
+    "interpretations": 143849,
+    "citations_mapped": 956476,
+    "citations_total": 1378382,
+    "signals": 1112,
+    "judges": 1997,
+    "courts": 6,
+    "earliest_year": 2021,
+    "latest_year": 2025,
+    "citations_pct": 69.4
+  },
+  "sub_labels": {
+    "cases": "6 courts \u00b7 2021\u20132025",
+    "entities": "Judges \u00b7 lawyers \u00b7 statutes \u00b7 organisations",
+    "interpretations": "How courts actually apply each law",
+    "citations_pct": "956,476 of 1,378,382 mapped to the law",
+    "actors": "Judges \u00b7 counsel \u00b7 parties \u00b7 organisations \u2014 one graph",
+    "signals": "Composite signals, each traceable to a source judgment"
+  }
+}
