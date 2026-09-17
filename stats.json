@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-07T04:19:06+00:00",
+  "generated_at": "2026-09-17T09:07:33+00:00",
   "source": "Legal M1ND corpus (Postgres). Every figure is a live count; see commands_scripts/publish_stats.py for the SQL.",
   "figures": {
     "cases": 265736,
@@ -14,6 +14,15 @@
     "courts": 6,
     "earliest_year": 2021,
     "latest_year": 2025,
+    "lawyers": 84792,
+    "organisations": 139187,
+    "precedents": 176652,
+    "outcomes": 311488,
+    "sentences": 15403760,
+    "hearings": 135281,
+    "parties": 284884,
+    "sections": 48150,
+    "micro_signals": 919,
     "citations_pct": 69.4
   },
   "sub_labels": {
@@ -23,5 +32,33 @@
     "citations_pct": "956,476 of 1,378,382 mapped to the law",
     "actors": "Judges \u00b7 counsel \u00b7 parties \u00b7 organisations \u2014 one graph",
     "signals": "Composite signals, each traceable to a source judgment"
+  },
+  "rendered": {
+    "cases": "265,736",
+    "cases_plain": "265736",
+    "actors": "225,976",
+    "actors_plain": "225976",
+    "citations_total": "1,378,382",
+    "citations_total_plain": "1378382",
+    "citations_mapped": "956,476",
+    "citations_mapped_plain": "956476",
+    "citations_pct": "69.4",
+    "interpretations": "143,849",
+    "interpretations_plain": "143849",
+    "lawyers": "84,792",
+    "lawyers_plain": "84792",
+    "outcomes": "311,488",
+    "outcomes_plain": "311488",
+    "entities_m": "18.5M",
+    "entities_plain": "18541371",
+    "sentences_m": "15.4M",
+    "sentences_plain": "15403760",
+    "precedents": "176,652",
+    "precedents_plain": "176652",
+    "hearings_plain": "135281",
+    "sections_plain": "48150",
+    "parties_plain": "284884",
+    "micro_signals": "919",
+    "micro_signals_plain": "919"
   }
 }
