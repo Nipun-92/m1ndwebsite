@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-17T09:07:33+00:00",
+  "generated_at": "2026-09-19T04:53:45+00:00",
   "source": "Legal M1ND corpus (Postgres). Every figure is a live count; see commands_scripts/publish_stats.py for the SQL.",
   "figures": {
     "cases": 265736,
@@ -9,7 +9,7 @@
     "interpretations": 143849,
     "citations_mapped": 956476,
     "citations_total": 1378382,
-    "signals": 1112,
+    "signals": 1932,
     "judges": 1997,
     "courts": 6,
     "earliest_year": 2021,
@@ -22,7 +22,7 @@
     "hearings": 135281,
     "parties": 284884,
     "sections": 48150,
-    "micro_signals": 919,
+    "micro_signals": 4709,
     "citations_pct": 69.4
   },
   "sub_labels": {
@@ -58,7 +58,7 @@
     "hearings_plain": "135281",
     "sections_plain": "48150",
     "parties_plain": "284884",
-    "micro_signals": "919",
-    "micro_signals_plain": "919"
+    "micro_signals": "4,709",
+    "micro_signals_plain": "4709"
   }
 }

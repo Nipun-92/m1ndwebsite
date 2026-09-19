@@ -463,7 +463,17 @@ const REDUCED=matchMedia('(prefers-reduced-motion: reduce)').matches;
   const pm=new THREE.PointsMaterial({size:.5,map:spr(),transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,color:0xE2C566,opacity:0,sizeAttenuation:true});
   grp.add(new THREE.Points(g,pm));
   const TH=3.4,MAXE=REDUCED?420:1500,E=[];
-  for(let i=0;i<N&&E.length<MAXE;i++)for(let j=i+1;j<N;j++){const dx=formed[i*3]-formed[j*3],dy=formed[i*3+1]-formed[j*3+1],dz=formed[i*3+2]-formed[j*3+2];if(dx*dx+dy*dy+dz*dz<TH*TH){E.push(i,j);if(E.length>=MAXE)break;}}
+  /* Found 2026-09-18: the old loop broke as soon as it found MAXE edges, taking the FIRST
+     qualifying pairs in (i,j) index order. Point i is placed by a Fibonacci-sphere walk that
+     goes pole to pole, so "first N pairs" means "one hemisphere" -- every edge landed on one
+     side, wiring it into a lattice, while the other side stayed bare dust. Collect every
+     candidate within the threshold, THEN sample it at an even stride, so the cap thins the
+     field uniformly instead of amputating half of it. */
+  const cand=[];
+  for(let i=0;i<N;i++)for(let j=i+1;j<N;j++){const dx=formed[i*3]-formed[j*3],dy=formed[i*3+1]-formed[j*3+1],dz=formed[i*3+2]-formed[j*3+2];if(dx*dx+dy*dy+dz*dz<TH*TH)cand.push(i,j);}
+  const pairs=cand.length>>1;
+  if(pairs<=MAXE){for(let k=0;k<cand.length;k++)E.push(cand[k]);}
+  else{const stride=pairs/MAXE;for(let k=0;k<MAXE;k++){const p=(k*stride)|0;E.push(cand[p*2],cand[p*2+1]);}}
   const st={f:0},m={x:0,y:0,tx:0,ty:0};let frozen=false;
   addEventListener('pointermove',e=>{m.tx=e.clientX/innerWidth*2-1;m.ty=e.clientY/innerHeight*2-1;},{passive:true});
   if(!REDUCED&&window.gsap){gsap.to(st,{f:1,duration:3.0,ease:'power3.out'});gsap.to(pm,{opacity:.85,duration:1.8});}
@@ -558,10 +568,14 @@ const REDUCED=matchMedia('(prefers-reduced-motion: reduce)').matches;
     {txt:'143,849 interpretations',x:.88,y:.6,  a:[.55,.8],  d:-.015},
     {txt:'225,976 actors',        x:.22,y:.72, a:[.58,.84], d:-.013},
     {txt:'1,112 signals',         x:.66,y:.8,  a:[.66,.9],  d:.011},
-    {txt:'signal: 0.91',          x:.5, y:.07, a:[.6,.82],   d:.01},
+    // 'signal: 0.91' removed 2026-09-18 -- decorative, nothing in the DB
+    // computes it, and formatted to two decimals next to six genuinely
+    // DB-backed figures it read as a real measurement. Flagged by the
+    // demo-video session building alongside this session; see
+    // DEVELOPMENT_LOG.md same date.
     {txt:'judicial signal',       x:.35,y:.27, a:[.72,1],    d:.012},
     {txt:'69.4% mapped to law',   x:.68,y:.27, a:[.74,1],    d:-.01},
-    {txt:'confidence: 0.89',      x:.5, y:.9,  a:[.84,1],    d:.008},
+    // 'confidence: 0.89' removed same day, same reason.
     {txt:'intelligence ready',    x:.5, y:.97, a:[.91,1],    d:.005},
   ];
 
