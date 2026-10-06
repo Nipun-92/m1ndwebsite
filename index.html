@@ -303,11 +303,11 @@
       <div class="head"><p class="label reveal">The scale behind the intelligence</p><h2 class="title reveal">Built from the official record.<br>Growing with every court.</h2>
       <p class="body center reveal">A snapshot of what is live and indexed today — this corpus expands with every new ingestion run.</p></div>
       <div class="stats">
-        <div class="glass stat reveal"><div class="n" data-stat="cases" data-fmt="int" data-target="275394">0</div><div class="l">Cases Ingested</div><div class="s">6 courts · 2021–2025</div></div>
+        <div class="glass stat reveal"><div class="n" data-stat="cases" data-fmt="int" data-target="282119">0</div><div class="l">Cases Ingested</div><div class="s">6 courts · 2021–2025</div></div>
         <div class="glass stat reveal"><div class="n" data-stat="entities" data-fmt="millions" data-target="18.5" data-dec="1" data-suffix="M">0</div><div class="l">Named Entity Extractions</div><div class="s">Judges · lawyers · statutes · organisations</div></div>
         <div class="glass stat reveal"><div class="n" data-stat="interpretations" data-fmt="int" data-target="143849">0</div><div class="l">Statute Interpretations</div><div class="s">How courts actually apply each law</div></div>
-        <div class="glass stat reveal"><div class="n" data-stat="citations_pct" data-fmt="pct" data-target="66.7" data-dec="1" data-suffix="%">0</div><div class="l">Citations Linked to Statute Text</div><div class="s">956,476 of 1,433,033 mapped to the law</div></div>
-        <div class="glass stat reveal"><div class="n" data-stat="actors" data-fmt="int" data-target="234263">0</div><div class="l">Legal Actors Mapped</div><div class="s">Judges · counsel · parties · organisations — one graph</div></div>
+        <div class="glass stat reveal"><div class="n" data-stat="citations_pct" data-fmt="pct" data-target="64.7" data-dec="1" data-suffix="%">0</div><div class="l">Citations Linked to Statute Text</div><div class="s">956,476 of 1,478,861 mapped to the law</div></div>
+        <div class="glass stat reveal"><div class="n" data-stat="actors" data-fmt="int" data-target="239788">0</div><div class="l">Legal Actors Mapped</div><div class="s">Judges · counsel · parties · organisations — one graph</div></div>
         <div class="glass stat reveal"><div class="n" data-stat="signals" data-fmt="int" data-target="1112">0</div><div class="l">Intelligence Signals</div><div class="s">Composite signals, each traceable to a source judgment</div></div>
         <div class="glass stat reveal"><div class="n" data-target="7">0</div><div class="l">Fused Intelligence Layers</div><div class="s">Text · statute · precedent · network · behavioural · OSINT</div></div>
         <div class="glass stat reveal"><div class="n" data-target="8">0</div><div class="l">Behavioural Instruments</div><div class="s">Research-grade; certified-psychologist validation in progress</div></div>
@@ -371,7 +371,7 @@
               <div class="pipe-dot"></div>
               <div class="pipe-label">Court Record</div>
               <div class="pipe-sub">Official Govt Data</div>
-              <p class="pipe-desc">275,394+ cases from official government sources — structured, versioned, continuously updated.</p>
+              <p class="pipe-desc">282,119+ cases from official government sources — structured, versioned, continuously updated.</p>
             </div>
             <div class="pipe-stage">
               <div class="pipe-dot"></div>
@@ -557,16 +557,16 @@ const REDUCED=matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   // floating intel labels
   const LBLS=[
-    {txt:'275,394 records',       x:.1, y:.07, a:[0,.3],   d:.022},
+    {txt:'282,119 records',       x:.1, y:.07, a:[0,.3],   d:.022},
     {txt:'unstructured',          x:.86,y:.09, a:[.04,.32], d:-.016},
-    {txt:'19.3M entities',         x:.5, y:.95, a:[.06,.3],  d:.012},
+    {txt:'20.0M entities',         x:.5, y:.95, a:[.06,.3],  d:.012},
     {txt:'raw noise',             x:.18,y:.86, a:[0,.26],   d:.018},
     {txt:'pattern emerging...',   x:.32,y:.17, a:[.3,.6],   d:.019},
     {txt:'convergence',           x:.71,y:.15, a:[.34,.62],  d:-.014},
     {txt:'clustering...',         x:.5, y:.92, a:[.36,.62],  d:.016},
     {txt:'thread found',          x:.11,y:.5,  a:[.52,.78],  d:.022},
     {txt:'143,849 interpretations',x:.88,y:.6,  a:[.55,.8],  d:-.015},
-    {txt:'234,263 actors',        x:.22,y:.72, a:[.58,.84], d:-.013},
+    {txt:'239,788 actors',        x:.22,y:.72, a:[.58,.84], d:-.013},
     {txt:'1,112 signals',         x:.66,y:.8,  a:[.66,.9],  d:.011},
     // 'signal: 0.91' removed 2026-09-18 -- decorative, nothing in the DB
     // computes it, and formatted to two decimals next to six genuinely
@@ -574,7 +574,7 @@ const REDUCED=matchMedia('(prefers-reduced-motion: reduce)').matches;
     // demo-video session building alongside this session; see
     // DEVELOPMENT_LOG.md same date.
     {txt:'judicial signal',       x:.35,y:.27, a:[.72,1],    d:.012},
-    {txt:'66.7% mapped to law',   x:.68,y:.27, a:[.74,1],    d:-.01},
+    {txt:'64.7% mapped to law',   x:.68,y:.27, a:[.74,1],    d:-.01},
     // 'confidence: 0.89' removed same day, same reason.
     {txt:'intelligence ready',    x:.5, y:.97, a:[.91,1],    d:.005},
   ];
