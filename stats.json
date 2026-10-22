@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-06T02:00:32+00:00",
+  "generated_at": "2026-10-22T02:00:33+00:00",
   "source": "Legal M1ND corpus (Postgres). Every figure is a live count; see commands_scripts/publish_stats.py for the SQL.",
   "figures": {
     "cases": 282119,
@@ -7,7 +7,7 @@
     "actors": 239788,
     "entities": 19990477,
     "interpretations": 143849,
-    "citations_mapped": 956476,
+    "citations_mapped": 1281590,
     "citations_total": 1478861,
     "signals": 1932,
     "judges": 2085,
@@ -23,13 +23,13 @@
     "parties": 294723,
     "sections": 48150,
     "micro_signals": 4709,
-    "citations_pct": 64.7
+    "citations_pct": 86.7
   },
   "sub_labels": {
     "cases": "6 courts \u00b7 2021\u20132025",
     "entities": "Judges \u00b7 lawyers \u00b7 statutes \u00b7 organisations",
     "interpretations": "How courts actually apply each law",
-    "citations_pct": "956,476 of 1,478,861 mapped to the law",
+    "citations_pct": "1,281,590 of 1,478,861 mapped to the law",
     "actors": "Judges \u00b7 counsel \u00b7 parties \u00b7 organisations \u2014 one graph",
     "signals": "Composite signals, each traceable to a source judgment"
   },
@@ -40,9 +40,9 @@
     "actors_plain": "239788",
     "citations_total": "1,478,861",
     "citations_total_plain": "1478861",
-    "citations_mapped": "956,476",
-    "citations_mapped_plain": "956476",
-    "citations_pct": "64.7",
+    "citations_mapped": "1,281,590",
+    "citations_mapped_plain": "1281590",
+    "citations_pct": "86.7",
     "interpretations": "143,849",
     "interpretations_plain": "143849",
     "lawyers": "91,998",
