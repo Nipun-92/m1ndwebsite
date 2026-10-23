@@ -4,6 +4,8 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Legal M1ND — Litigation Intelligence</title>
+<link rel="icon" href="favicon.ico" sizes="any" />
+<link rel="apple-touch-icon" href="apple_touch_icon_180.png" />
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-2VM264GHP2"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-2VM264GHP2');</script>
@@ -233,8 +235,8 @@
     100%{opacity:1;filter:blur(0);transform:translateY(0);color:inherit}}
 
   /* ── Hero logo image ── */
-  .hero-logo-img{display:block;max-height:clamp(80px,20vw,120px);max-width:clamp(220px,60vw,340px);margin:0 auto 1.4rem;
-    filter:brightness(1.2) drop-shadow(0 0 28px rgba(200,155,32,.45));object-fit:contain}
+  /* new logo (23 Oct 2026): the vector logo carries the name; no glow, no shadow */
+  .hero-logo-img{display:block;width:300px;max-width:78vw;height:auto;margin:0 auto 1.4rem}
   @media(max-width:560px){.hero-logo-img{margin:0 auto 1rem}}
 </style>
 </head>
@@ -244,7 +246,7 @@
   <div class="veil"></div>
 
   <div class="nav" id="nav"><div class="inner">
-    <a class="brand" href="#top"><span class="g">M1ND</span></a>
+    <a class="brand" href="#top"><img src="wordmark_dark.svg" alt="Legal M1ND" height="26" style="display:block;height:26px;width:auto"></a>
     <div class="nav-links">
       <a href="#what-we-do">What We Do</a><a href="#data">The Data</a><a href="#who">Who It's For</a>
       <a href="#contact" class="cta">Get in Touch</a>
@@ -256,8 +258,7 @@
     <section class="hero" id="top">
       <div class="hero-scrim"></div>
       <div class="hero-in">
-        <img src="Legal M1ND Logo.png" alt="Legal M1ND" class="hero-logo-img" data-h>
-        <div class="hero-logo" data-h>M<span class="g">1</span>ND</div>
+        <img src="logo_dark.svg" alt="Legal M1ND" class="hero-logo-img" width="300" data-h>
         <div class="kicker" data-h>Litigation Intelligence</div>
         <h1 data-h>Search <span style="color:var(--gold)">&ne;</span> Strategy.</h1>
         <p class="hero-deck" data-h>Data is everywhere. Intelligence is not.</p>
